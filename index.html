@@ -1,1607 +1,212 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>USA Plate — American Meal Planner</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<title>USA Plate — Family American Meal Planner</title>
+
 <style>
-:root{
-  --navy:#0C1F3F;--red:#C8293C;--gold:#D4A843;--cream:#F8F5F0;--slate:#4A5568;--steel:#E2E8F0;
-  --mint:#1A6B4A;--sky:#1A5F8A;--border:rgba(12,31,63,0.12);--shadow:0 4px 24px rgba(12,31,63,0.09);
-  --red-light:rgba(200,41,60,0.08);--navy-light:rgba(12,31,63,0.06)
+body {
+    font-family: Arial, sans-serif;
+    background:#F5EFE6;
+    margin:0;
+    color:#0C1F3F;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh;
-  background-image:radial-gradient(ellipse at 20% 0%,rgba(12,31,63,0.04) 0%,transparent 60%),
-  radial-gradient(ellipse at 80% 100%,rgba(200,41,60,0.04) 0%,transparent 60%)}
 
-/* ── HEADER ── */
-header{background:var(--navy);padding:.85rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.35)}
-.logo{display:flex;align-items:baseline;gap:.6rem}
-.logo-text{font-family:'Fraunces',serif;font-size:1.75rem;color:#fff;letter-spacing:-.02em}
-.logo-star{color:var(--gold);font-size:1.1rem;margin:0 .1rem}
-.logo-tagline{font-size:.65rem;color:rgba(255,255,255,0.35);letter-spacing:.15em;text-transform:uppercase}
-.hdr-btn{background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.75);padding:.38rem .9rem;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.76rem;transition:all .2s}
-.hdr-btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.4);color:#fff}
-
-/* ── STEP BAR ── */
-.steps-bar{display:flex;align-items:center;background:#fff;border-bottom:1.5px solid var(--border);padding:0 2rem;overflow-x:auto;gap:0}
-.step{display:flex;align-items:center;gap:.4rem;padding:.82rem 1rem .82rem 0;font-size:.77rem;font-weight:500;color:rgba(12,31,63,0.3);white-space:nowrap;border-bottom:2.5px solid transparent;transition:all .2s}
-.step.active{color:var(--red);border-bottom-color:var(--red)}
-.step.done{color:var(--mint);cursor:pointer}
-.step-num{width:18px;height:18px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;flex-shrink:0}
-.step.done .step-num{background:var(--mint);border-color:var(--mint);color:#fff}
-.step-arrow{color:var(--border);margin-right:1rem;font-size:.75rem;flex-shrink:0}
-
-main{max-width:1320px;margin:0 auto;padding:2rem 1.5rem}
-.screen{display:none;animation:fadeUp .3s ease}
-.screen.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-.section-title{font-family:'Fraunces',serif;font-size:1.55rem;margin-bottom:.3rem;color:var(--navy)}
-.section-sub{font-size:.86rem;color:var(--slate);margin-bottom:1.6rem;line-height:1.55}
-.back-btn{background:transparent;border:1.5px solid var(--border);color:var(--slate);padding:.4rem .9rem;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.79rem;font-weight:500;display:flex;align-items:center;gap:.3rem;margin-bottom:1.2rem;transition:all .2s;width:fit-content}
-.back-btn:hover{border-color:var(--red);color:var(--red)}
-
-/* ── REGION PICKER ── */
-.detect-btn{display:flex;align-items:center;gap:.5rem;background:var(--navy);color:#fff;border:none;padding:.65rem 1.25rem;border-radius:10px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.86rem;font-weight:600;margin-bottom:1.2rem;transition:all .2s;box-shadow:0 3px 14px rgba(12,31,63,0.25)}
-.detect-btn:hover{background:#1a3260;box-shadow:0 5px 20px rgba(12,31,63,0.35);transform:translateY(-1px)}
-.detect-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
-.detect-status{font-size:.76rem;color:var(--slate)}
-.popular-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:1.1rem;padding:.7rem 1rem;background:#fff;border:1px solid var(--border);border-radius:10px}
-.popular-label{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--slate);flex-shrink:0}
-.pop-chip{padding:.25rem .72rem;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;font-size:.75rem;font-weight:500;background:var(--cream);color:var(--slate);transition:all .15s}
-.pop-chip:hover{border-color:var(--red);color:var(--red)}
-.pop-chip.sel{border-color:var(--red);background:var(--red-light);color:var(--red)}
-.zone-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
-.zone-tab{padding:.36rem .82rem;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;font-size:.77rem;font-weight:500;background:#fff;color:var(--slate);transition:all .18s;font-family:'DM Sans',sans-serif}
-.zone-tab:hover{border-color:var(--navy);color:var(--navy)}
-.zone-tab.active{background:var(--red);color:#fff;border-color:var(--red)}
-.state-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.48rem;margin-bottom:1.2rem}
-.state-card{padding:.58rem .82rem;border:1.5px solid var(--border);border-radius:9px;cursor:pointer;font-size:.81rem;font-weight:500;background:#fff;transition:all .15s;display:flex;align-items:center;gap:.4rem;color:var(--slate)}
-.state-card:hover{border-color:var(--navy);color:var(--navy);background:var(--navy-light)}
-.state-card.selected{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:600}
-.state-flag{font-size:.95rem;flex-shrink:0}
-
-/* ── CUISINE STYLE ── */
-.style-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.85rem;margin-bottom:1.6rem}
-.style-card{border:1.5px solid var(--border);border-radius:13px;padding:1.1rem;cursor:pointer;background:#fff;transition:all .2s;position:relative;overflow:hidden}
-.style-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,var(--navy))}
-.style-card:hover{border-color:var(--navy);box-shadow:var(--shadow)}
-.style-card.selected{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,41,60,0.1)}
-.style-icon{font-size:1.6rem;margin-bottom:.45rem}
-.style-name{font-weight:700;font-size:.9rem;margin-bottom:.18rem;color:var(--navy)}
-.style-states{font-size:.7rem;color:var(--slate);line-height:1.4;margin-bottom:.2rem}
-.style-desc{font-size:.68rem;color:var(--slate);font-style:italic;line-height:1.4}
-
-/* ── HOUSEHOLD ── */
-.panel{background:#fff;border-radius:12px;padding:1.2rem;border:1px solid var(--border);margin-bottom:1.1rem}
-.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
-.panel-title{font-family:'Fraunces',serif;font-size:1.05rem;display:flex;align-items:center;gap:.4rem}
-.add-btn{background:var(--red);color:#fff;border:none;padding:.33rem .82rem;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:600;transition:all .2s}
-.add-btn:hover{background:#a8202f}
-.person-row{display:grid;grid-template-columns:110px 1fr 130px 120px auto;gap:.5rem;margin-bottom:.5rem;align-items:center}
-.person-col-headers{display:grid;grid-template-columns:110px 1fr 130px 120px 28px;gap:.5rem;margin-bottom:.3rem}
-.fi{padding:.56rem .82rem;border:1.5px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.83rem;background:var(--cream);outline:none;transition:border .2s;width:100%}
-.fi:focus{border-color:var(--red);background:#fff}
-.fi-date{padding:.53rem .68rem}
-.remove-btn{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--slate);font-size:.85rem;transition:all .2s;flex-shrink:0}
-.remove-btn:hover{border-color:var(--red);color:var(--red)}
-.col-label{font-size:.63rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--slate);padding-bottom:.3rem}
-
-/* ── PREFS ── */
-.meta-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem;margin-bottom:1.3rem}
-.field-group{display:flex;flex-direction:column;gap:.3rem}
-.field-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--slate)}
-.field-select,.field-input{padding:.6rem .85rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;background:#fff;outline:none;cursor:pointer;transition:border .2s;color:var(--navy)}
-.field-select:focus,.field-input:focus{border-color:var(--red)}
-
-/* DIET GOAL */
-.goal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.65rem;margin-bottom:1.3rem}
-.goal-chip{padding:.72rem 1rem;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;background:#fff;transition:all .18s;display:flex;align-items:flex-start;gap:.55rem}
-.goal-chip.selected{border-color:var(--red);background:var(--red-light)}
-.goal-icon{font-size:1.3rem;flex-shrink:0;margin-top:.05rem}
-.goal-label{font-size:.8rem;font-weight:600;color:var(--navy)}
-.goal-desc{font-size:.67rem;color:var(--slate);line-height:1.35;margin-top:.1rem}
-
-/* DIET TYPE */
-.diet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.6rem;margin-bottom:1.3rem}
-.diet-chip{padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;background:#fff;transition:all .18s;text-align:center}
-.diet-chip.selected{border-color:var(--red);background:var(--red-light)}
-.diet-chip-icon{font-size:1.2rem;margin-bottom:.2rem}
-.diet-chip-label{font-size:.78rem;font-weight:600;color:var(--navy)}
-.diet-chip-desc{font-size:.63rem;color:var(--slate);margin-top:.08rem}
-
-/* OPTIONS */
-.options-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:.6rem;margin-bottom:1.3rem}
-.opt-card{border:1.5px solid var(--border);border-radius:9px;padding:.7rem .9rem;cursor:pointer;background:#fff;transition:all .18s;display:flex;align-items:center;gap:.55rem;font-size:.8rem;font-weight:500;color:var(--slate)}
-.opt-card.active{border-color:var(--red);background:var(--red-light);color:var(--navy)}
-.opt-card .opt-icon{font-size:1rem;flex-shrink:0}
-
-/* CALORIE INPUT */
-.calorie-row{display:flex;align-items:center;gap:.7rem;margin-bottom:1.3rem;flex-wrap:wrap}
-.calorie-preset{padding:.3rem .7rem;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;font-size:.75rem;font-weight:500;background:#fff;color:var(--slate);transition:all .15s}
-.calorie-preset:hover,.calorie-preset.active{border-color:var(--red);color:var(--red)}
-
-/* ── GENERATE ── */
-.generate-btn{display:block;width:100%;padding:.85rem;background:var(--red);color:#fff;border:none;border-radius:10px;font-family:'Fraunces',serif;font-size:1.05rem;font-weight:600;cursor:pointer;transition:all .2s;letter-spacing:.01em;margin-top:1.2rem}
-.generate-btn:hover{background:#a8202f;box-shadow:0 6px 20px rgba(200,41,60,0.3)}
-.generate-btn:disabled{opacity:.6;cursor:not-allowed;box-shadow:none}
-
-/* ── PLAN LAYOUT ── */
-.plan-layout{display:grid;grid-template-columns:1fr 350px;gap:1.6rem;align-items:start}
-.plan-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
-.toolbar-left{display:flex;align-items:center;gap:.8rem}
-.view-toggle{display:flex;background:#fff;border:1.5px solid var(--border);border-radius:8px;overflow:hidden}
-.view-btn{padding:.38rem .88rem;font-size:.78rem;font-weight:500;cursor:pointer;border:none;background:transparent;font-family:'DM Sans',sans-serif;color:var(--slate);transition:all .18s}
-.view-btn.active{background:var(--navy);color:#fff}
-.view-label{font-size:.82rem;color:var(--slate);font-weight:500}
-.nav-btn{padding:.38rem .85rem;background:#fff;border:1.5px solid var(--border);border-radius:7px;cursor:pointer;font-size:.78rem;font-weight:500;color:var(--slate);font-family:'DM Sans',sans-serif;transition:all .18s}
-.nav-btn:hover:not(:disabled){border-color:var(--navy);color:var(--navy)}
-.nav-btn:disabled{opacity:.38;cursor:default}
-
-/* DAY CARDS */
-.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.55rem}
-.day-card{background:#fff;border:1.5px solid var(--border);border-radius:11px;overflow:hidden;transition:all .2s}
-.day-card:hover{box-shadow:var(--shadow)}
-.day-card.holiday-day{border-color:rgba(212,168,67,0.4);background:rgba(212,168,67,0.02)}
-.day-card.eatout-day{border-color:rgba(26,95,138,0.3);background:rgba(26,95,138,0.02)}
-.day-card.prepday-day{border-color:rgba(26,107,74,0.3);background:rgba(26,107,74,0.02)}
-.day-header{background:var(--navy);padding:.42rem .62rem;display:flex;align-items:center;justify-content:space-between}
-.day-card.holiday-day .day-header{background:var(--gold)}
-.day-card.eatout-day .day-header{background:var(--sky)}
-.day-card.prepday-day .day-header{background:var(--mint)}
-.day-name{font-weight:700;font-size:.72rem;color:#fff}
-.day-date-mini{font-size:.62rem;color:rgba(255,255,255,0.6)}
-.day-meta{display:flex;gap:.28rem;flex-wrap:wrap}
-.tag{display:inline-flex;align-items:center;gap:.18rem;font-size:.58rem;padding:.08rem .32rem;border-radius:10px;font-weight:600}
-.tag.holiday{background:rgba(212,168,67,0.25);color:#7a5e00}
-.tag.eatout{background:rgba(255,255,255,0.2);color:#fff}
-.day-meals{padding:.52rem}
-.meal-cell{padding:.38rem .44rem;border-radius:7px;background:var(--cream);margin-bottom:.35rem;position:relative}
-.meal-cell:last-child{margin-bottom:0}
-.meal-type{font-size:.59rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--slate);display:flex;align-items:center;gap:.28rem;margin-bottom:.18rem}
-.meal-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.meal-dot.breakfast{background:#D4A843}
-.meal-dot.lunch{background:var(--red)}
-.meal-dot.dinner{background:var(--navy)}
-.meal-dot.snack{background:var(--mint)}
-.meal-main{font-size:.77rem;font-weight:600;color:var(--navy);line-height:1.3}
-.meal-side{font-size:.67rem;color:var(--slate);margin-top:.06rem}
-.swap-btn{position:absolute;top:.32rem;right:.32rem;background:transparent;border:none;cursor:pointer;font-size:.7rem;color:var(--slate);opacity:0;transition:opacity .18s}
-.meal-cell:hover .swap-btn{opacity:1}
-.calorie-tag{font-size:.6rem;color:var(--mint);font-weight:600;margin-top:.12rem}
-.macro-bar{height:3px;border-radius:2px;background:var(--steel);margin-top:.2rem;overflow:hidden;display:flex}
-.macro-p{background:var(--red);height:100%}
-.macro-c{background:var(--gold);height:100%}
-.macro-f{background:var(--sky);height:100%}
-
-/* PREP DAY BADGE */
-.prep-badge{font-size:.59rem;font-weight:700;color:var(--mint);text-transform:uppercase;letter-spacing:.06em;padding:.08rem .36rem;background:rgba(26,107,74,0.1);border-radius:10px;display:inline-block;margin-top:.18rem}
-.prep-time-badge{display:inline-flex;align-items:center;gap:.15rem;font-size:.59rem;font-weight:600;padding:.08rem .34rem;border-radius:10px;margin-top:.18rem}
-.prep-time-badge.quick{background:rgba(26,107,74,0.1);color:var(--mint)}
-.prep-time-badge.medium{background:rgba(212,168,67,0.12);color:#7a5e00}
-.prep-time-badge.slow{background:rgba(200,41,60,0.08);color:var(--red)}
-.repeat-warn{font-size:.58rem;color:var(--red);background:rgba(200,41,60,0.07);border-radius:4px;padding:.06rem .28rem;margin-top:.12rem;display:inline-block}
-
-/* LEGEND */
-.legend{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:.8rem;font-size:.72rem;color:var(--slate)}
-.legend-item{display:flex;align-items:center;gap:.3rem}
-.legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-
-/* MONTH VIEW */
-.month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.35rem;margin-bottom:.35rem}
-.month-day-hdr{font-size:.66rem;font-weight:600;text-align:center;color:var(--slate);padding:.3rem 0}
-.month-cell{background:#fff;border:1px solid var(--border);border-radius:7px;padding:.4rem;min-height:80px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
-.month-cell:hover{border-color:var(--red);box-shadow:0 2px 8px rgba(200,41,60,0.08)}
-.month-cell.empty{background:transparent;border-color:transparent;cursor:default}
-.month-num{font-size:.72rem;font-weight:700;color:var(--slate);margin-bottom:.22rem;display:flex;align-items:center;justify-content:space-between}
-.month-dots{display:flex;gap:.18rem;align-items:center}
-.mdot{width:5px;height:5px;border-radius:50%}
-.mdot.holiday{background:var(--gold)}
-.mdot.eatout{background:var(--sky)}
-.month-meal-mini{font-size:.58rem;line-height:1.3;color:var(--navy)}
-.month-meal-mini .mb{color:var(--slate)}
-.month-holiday-bar{position:absolute;bottom:0;left:0;right:0;height:2.5px;background:var(--gold)}
-
-/* ── SIDEBAR ── */
-/* BUDGET */
-.budget-panel{background:linear-gradient(135deg,var(--navy),#1a3260);border-radius:13px;padding:1rem 1.1rem;margin-bottom:.9rem;color:#fff;position:relative;overflow:hidden}
-.budget-panel::before{content:'$';position:absolute;right:.8rem;top:50%;transform:translateY(-50%);font-size:4rem;font-family:'Fraunces',serif;color:rgba(255,255,255,0.05);font-weight:700;pointer-events:none}
-.budget-title{font-family:'Fraunces',serif;font-size:.9rem;color:var(--gold);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
-.budget-tier-row{display:flex;gap:.3rem;margin-bottom:.65rem}
-.budget-tier{padding:.2rem .58rem;border-radius:20px;font-size:.66rem;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);background:transparent;font-family:'DM Sans',sans-serif;transition:all .18s}
-.budget-tier.active{background:var(--gold);color:var(--navy);border-color:var(--gold)}
-.budget-totals{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.55rem}
-.budget-item{background:rgba(255,255,255,0.07);border-radius:8px;padding:.5rem .68rem}
-.budget-item-label{font-size:.59rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,0.42);margin-bottom:.16rem}
-.budget-item-val{font-size:1.08rem;font-weight:700;color:var(--gold);font-family:'Fraunces',serif}
-.budget-item-sub{font-size:.57rem;color:rgba(255,255,255,0.3);margin-top:.04rem}
-.budget-bar-row{display:flex;gap:.32rem;align-items:center;margin-bottom:.12rem}
-.budget-bar-label{font-size:.61rem;color:rgba(255,255,255,0.45);width:50px;flex-shrink:0}
-.budget-bar-track{flex:1;height:5px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden}
-.budget-bar-fill{height:100%;border-radius:3px;transition:width .5s ease}
-.budget-bar-amt{font-size:.61rem;color:rgba(255,255,255,0.5);width:40px;text-align:right;flex-shrink:0}
-.budget-tip{font-size:.63rem;color:rgba(212,168,67,0.85);background:rgba(212,168,67,0.1);border-radius:5px;padding:.2rem .48rem;text-align:center;margin-top:.4rem}
-
-/* MACRO PANEL */
-.macro-panel{background:#fff;border:1px solid var(--border);border-radius:12px;padding:.9rem;margin-bottom:.8rem}
-.macro-title{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--slate);margin-bottom:.6rem}
-.macro-week-bars{display:flex;flex-direction:column;gap:.4rem}
-.macro-row{display:flex;align-items:center;gap:.45rem}
-.macro-lbl{font-size:.67rem;color:var(--slate);width:58px;flex-shrink:0}
-.macro-track{flex:1;height:7px;background:var(--steel);border-radius:4px;overflow:hidden}
-.macro-fill{height:100%;border-radius:4px;transition:width .6s ease}
-.macro-pct{font-size:.61rem;color:var(--slate);width:28px;text-align:right;flex-shrink:0}
-
-/* SEASON BANNER */
-.season-banner{border-radius:10px;padding:.58rem 1rem;margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem;font-size:.79rem;font-weight:500;line-height:1.4}
-.season-banner.summer{background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.3);color:#7a5e00}
-.season-banner.fall{background:rgba(200,41,60,0.07);border:1px solid rgba(200,41,60,0.2);color:var(--red)}
-.season-banner.winter{background:rgba(12,31,63,0.06);border:1px solid rgba(12,31,63,0.15);color:var(--navy)}
-.season-banner.spring{background:rgba(26,107,74,0.07);border:1px solid rgba(26,107,74,0.18);color:var(--mint)}
-
-/* GROCERY */
-.grocery-panel{background:#fff;border:1px solid var(--border);border-radius:13px;overflow:hidden;box-shadow:var(--shadow);position:sticky;top:4.1rem}
-.grocery-header{background:var(--navy);padding:.82rem 1.1rem;display:flex;align-items:center;justify-content:space-between}
-.grocery-header h3{color:var(--gold);font-family:'Fraunces',serif;font-size:.95rem}
-.grocery-scope-badge{background:rgba(212,168,67,0.15);color:var(--gold);font-size:.63rem;font-weight:600;padding:.1rem .42rem;border-radius:20px}
-.grocery-body{padding:.9rem;max-height:320px;overflow-y:auto}
-.grocery-body::-webkit-scrollbar{width:3px}
-.grocery-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-.grocery-cat{margin-bottom:.82rem}
-.grocery-cat-name{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--slate);margin-bottom:.32rem;padding-bottom:.18rem;border-bottom:1px solid var(--border)}
-.grocery-item{display:flex;align-items:center;gap:.4rem;padding:.18rem 0;font-size:.77rem;border-bottom:1px dashed rgba(12,31,63,0.06);cursor:pointer;transition:opacity .2s}
-.grocery-item:last-child{border-bottom:none}
-.grocery-item.checked{opacity:.35;text-decoration:line-through}
-.grocery-checkbox{width:13px;height:13px;border-radius:3px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.55rem;transition:all .18s}
-.grocery-item.checked .grocery-checkbox{background:var(--mint);border-color:var(--mint);color:#fff}
-.grocery-item-name{flex:1}
-.grocery-qty{font-size:.67rem;color:var(--slate);font-weight:500;white-space:nowrap}
-.grocery-tip-box{background:rgba(212,168,67,0.07);border-left:3px solid var(--gold);padding:.5rem .72rem;margin:.6rem .9rem 0;border-radius:0 6px 6px 0}
-.grocery-tip-title{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gold);margin-bottom:.14rem}
-.grocery-tip-text{font-size:.72rem;color:var(--slate);line-height:1.45}
-.grocery-actions{padding:.6rem .9rem .9rem;display:flex;flex-direction:column;gap:.38rem}
-.grocery-btn{width:100%;padding:.56rem;background:transparent;border:1.5px solid var(--red);color:var(--red);border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:600;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:.26rem}
-.grocery-btn:hover{background:var(--red-light)}
-.grocery-btn.dark{background:var(--navy);color:var(--gold);border-color:var(--navy)}
-.grocery-btn.green{border-color:var(--mint);color:var(--mint)}
-.grocery-btn.green:hover{background:rgba(26,107,74,0.07)}
-
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(12,31,63,0.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .22s;backdrop-filter:blur(3px)}
-.modal-overlay.open{opacity:1;pointer-events:all}
-.modal{background:#fff;border-radius:16px;max-width:580px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.22);animation:modalIn .22s ease}
-@keyframes modalIn{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
-.modal-header{background:var(--navy);padding:.9rem 1.2rem;border-radius:16px 16px 0 0;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1}
-.modal-title{color:var(--gold);font-family:'Fraunces',serif;font-size:1.02rem}
-.modal-close{background:transparent;border:none;color:rgba(255,255,255,0.4);font-size:1.25rem;cursor:pointer;line-height:1;transition:color .2s}
-.modal-close:hover{color:#fff}
-.modal-body{padding:1.1rem}
-.modal-meal-sec{margin-bottom:.9rem;padding-bottom:.9rem;border-bottom:1px solid var(--border)}
-.modal-meal-sec:last-of-type{border-bottom:none}
-.modal-meal-type{font-size:.66rem;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--slate);margin-bottom:.32rem;display:flex;align-items:center;gap:.3rem}
-.modal-meal-name{font-size:1rem;font-weight:700;font-family:'Fraunces',serif;margin-bottom:.14rem;color:var(--navy)}
-.modal-meal-side{font-size:.79rem;color:var(--slate)}
-.modal-macros{display:flex;gap:.6rem;margin-top:.35rem;flex-wrap:wrap}
-.modal-macro{font-size:.67rem;padding:.1rem .42rem;border-radius:10px;font-weight:600}
-.modal-macro.p{background:rgba(200,41,60,0.08);color:var(--red)}
-.modal-macro.c{background:rgba(212,168,67,0.12);color:#7a5e00}
-.modal-macro.f{background:rgba(26,95,138,0.08);color:var(--sky)}
-.modal-macro.cal{background:rgba(12,31,63,0.07);color:var(--navy)}
-.show-swap{font-size:.7rem;color:var(--red);background:transparent;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:.3rem;text-decoration:underline}
-.swap-opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:.3rem;margin-top:.5rem}
-.swap-opt{padding:.36rem .58rem;border:1.5px solid var(--border);border-radius:6px;font-size:.73rem;cursor:pointer;transition:all .15s;background:#fff;font-family:'DM Sans',sans-serif;color:var(--slate)}
-.swap-opt:hover{border-color:var(--red);color:var(--red)}
-
-/* RECIPE */
-.recipe-toggle{display:flex;align-items:center;gap:.35rem;font-size:.73rem;color:var(--mint);background:rgba(26,107,74,0.07);border:1px solid rgba(26,107,74,0.18);border-radius:7px;padding:.3rem .7rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;margin-top:.52rem;transition:all .18s;width:100%;justify-content:center}
-.recipe-toggle:hover{background:rgba(26,107,74,0.12)}
-.recipe-box{display:none;margin-top:.52rem;background:rgba(26,107,74,0.03);border:1px solid rgba(26,107,74,0.14);border-radius:9px;overflow:hidden;animation:fadeUp .2s ease}
-.recipe-box.open{display:block}
-.recipe-section-hdr{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:.48rem .82rem .22rem;color:var(--mint)}
-.recipe-ingredients{padding:0 .82rem .48rem;display:flex;flex-direction:column;gap:.18rem}
-.recipe-ing{font-size:.76rem;color:var(--navy);display:flex;align-items:baseline;gap:.38rem;padding:.1rem 0;border-bottom:1px dashed rgba(26,107,74,0.1)}
-.recipe-ing:last-child{border-bottom:none}
-.recipe-ing-amt{font-size:.68rem;color:var(--slate);min-width:62px;flex-shrink:0;font-weight:500}
-.recipe-steps{padding:0 .82rem .65rem;counter-reset:step}
-.recipe-step{font-size:.76rem;color:var(--navy);padding:.42rem 0 .42rem 1.85rem;border-bottom:1px dashed rgba(26,107,74,0.08);position:relative;line-height:1.45;counter-increment:step}
-.recipe-step:last-child{border-bottom:none}
-.recipe-step::before{content:counter(step);position:absolute;left:0;top:.4rem;width:1.28rem;height:1.28rem;background:var(--navy);color:#fff;border-radius:50%;font-size:.59rem;font-weight:700;display:flex;align-items:center;justify-content:center}
-.recipe-tip{font-size:.7rem;color:var(--red);background:rgba(200,41,60,0.05);padding:.38rem .82rem;border-top:1px solid rgba(200,41,60,0.1);font-style:italic}
-.recipe-no-data{font-size:.75rem;color:var(--slate);padding:.58rem .82rem;text-align:center}
-
-/* BADGES */
-.badge-row{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.9rem}
-.info-badge{padding:.24rem .62rem;border-radius:20px;font-size:.7rem;font-weight:500;background:var(--red-light);color:var(--red);border:1px solid rgba(200,41,60,0.18)}
-.info-badge.green{background:rgba(26,107,74,0.08);color:var(--mint);border-color:rgba(26,107,74,0.18)}
-.info-badge.blue{background:rgba(26,95,138,0.08);color:var(--sky);border-color:rgba(26,95,138,0.18)}
-.info-badge.gold{background:rgba(212,168,67,0.1);color:#7a5e00;border-color:rgba(212,168,67,0.25)}
-
-.spinner{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:.36rem}
-@keyframes spin{to{transform:rotate(360deg)}}
-.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:.55rem 1.3rem;border-radius:30px;font-size:.82rem;font-weight:500;opacity:0;transition:all .3s;z-index:300;pointer-events:none;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* PREP MODE BANNER */
-.prep-mode-banner{border-radius:10px;padding:.65rem 1rem;margin-bottom:1rem;background:rgba(26,107,74,0.07);border:1px solid rgba(26,107,74,0.2);display:flex;align-items:flex-start;gap:.6rem}
-.prep-mode-banner.hidden{display:none}
-.prep-mode-icon{font-size:1.2rem;flex-shrink:0;margin-top:.05rem}
-.prep-mode-text{font-size:.79rem;color:var(--mint);font-weight:500;line-height:1.4}
-
-/* PRINT */
-@media print{
-  header,.steps-bar,.plan-toolbar .view-toggle,.nav-btn,.back-btn,.hdr-btn,.swap-btn,.grocery-actions,.grocery-tip-box,.show-swap,.swap-opts,.modal-overlay,.budget-panel,.macro-panel,.season-banner,.recipe-toggle,.recipe-box,.prep-mode-banner{display:none!important}
-  body{background:white}
-  .plan-layout{display:grid;grid-template-columns:1fr 220px;gap:.6rem}
-  .grocery-panel{position:static;box-shadow:none}
-  .grocery-body{max-height:none}
-  .day-card{break-inside:avoid;box-shadow:none;margin-bottom:.42rem}
-  main{padding:.4rem}
+header {
+    background:#0C1F3F;
+    color:white;
+    padding:15px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
-@media(max-width:1080px){.plan-layout{grid-template-columns:1fr}.grocery-panel{position:static}.week-grid{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:680px){.week-grid{grid-template-columns:repeat(2,1fr)}.meta-row{grid-template-columns:1fr 1fr}.goal-grid{grid-template-columns:1fr 1fr}}
+
+.logo {
+    font-size:22px;
+    font-weight:bold;
+}
+
+.banner {
+    background:#C8293C;
+    color:white;
+    padding:12px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.section {
+    padding:25px;
+}
+
+.card {
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.08);
+    margin-bottom:20px;
+}
+
+.button {
+    background:#C8293C;
+    color:white;
+    padding:12px 18px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin:5px 0;
+    font-weight:bold;
+}
+
+.button:hover {
+    opacity:0.9;
+}
+
+.grocery-actions {
+    margin-top:15px;
+}
+
+.disclosure {
+    font-size:12px;
+    color:#666;
+    margin-top:10px;
+}
+
+.kid-print {
+    display:none;
+}
+
+@media print {
+    body { background:white; }
+    header, .button, .disclosure { display:none !important; }
+    .kid-print {
+        display:block;
+        font-size:20px;
+        text-align:center;
+        margin-bottom:20px;
+    }
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <span class="logo-text">USA</span>
-    <span class="logo-star">★</span>
-    <span class="logo-text">Plate</span>
-    <span class="logo-tagline">American Meal Planner</span>
-  </div>
-  <button class="hdr-btn" onclick="resetAll()">↺ Start Over</button>
+<div class="logo">USA ★ Plate — Family Meal Planning</div>
 </header>
 
-<div class="steps-bar">
-  <div class="step active" id="step1"><span class="step-num">1</span> Location</div>
-  <span class="step-arrow">›</span>
-  <div class="step" id="step2"><span class="step-num">2</span> Food Style</div>
-  <span class="step-arrow">›</span>
-  <div class="step" id="step3"><span class="step-num">3</span> Household</div>
-  <span class="step-arrow">›</span>
-  <div class="step" id="step4"><span class="step-num">4</span> Goals & Prefs</div>
-  <span class="step-arrow">›</span>
-  <div class="step" id="step5"><span class="step-num">5</span> Meal Plan</div>
+<div class="banner" id="family-theme"></div>
+
+<div class="section">
+
+<div class="card">
+<h2>Seasonal Produce Spotlight</h2>
+<p id="seasonal-produce"></p>
 </div>
 
-<main>
-
-<!-- S1: STATE -->
-<div class="screen active" id="screen-state">
-  <h2 class="section-title">Where are you located?</h2>
-  <p class="section-sub">We tailor regional recipes, grocery store picks, and seasonal ingredients to your state.</p>
-  <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem;flex-wrap:wrap">
-    <button class="detect-btn" id="detect-btn" onclick="detectLocation()">📍 Detect My Location</button>
-    <span id="detect-status" class="detect-status"></span>
-  </div>
-  <div class="popular-row">
-    <span class="popular-label">🔥 Popular</span>
-    <span class="pop-chip" onclick="selectState('California')">🌴 California</span>
-    <span class="pop-chip" onclick="selectState('Texas')">🤠 Texas</span>
-    <span class="pop-chip" onclick="selectState('New York')">🗽 New York</span>
-    <span class="pop-chip" onclick="selectState('Florida')">🌞 Florida</span>
-    <span class="pop-chip" onclick="selectState('Illinois')">🌆 Illinois</span>
-    <span class="pop-chip" onclick="selectState('Georgia')">🍑 Georgia</span>
-    <span class="pop-chip" onclick="selectState('Washington')">🌲 Washington</span>
-    <span class="pop-chip" onclick="selectState('Colorado')">⛰️ Colorado</span>
-  </div>
-  <div class="zone-tabs" id="zone-tabs">
-    <button class="zone-tab active" onclick="filterZone('all',this)">🗺️ All States</button>
-    <button class="zone-tab" onclick="filterZone('northeast',this)">🦞 Northeast</button>
-    <button class="zone-tab" onclick="filterZone('south',this)">🍑 South</button>
-    <button class="zone-tab" onclick="filterZone('midwest',this)">🌽 Midwest</button>
-    <button class="zone-tab" onclick="filterZone('southwest',this)">🌵 Southwest</button>
-    <button class="zone-tab" onclick="filterZone('west',this)">🌊 West</button>
-    <button class="zone-tab" onclick="filterZone('pacific',this)">🌺 Pacific</button>
-  </div>
-  <div class="state-grid" id="state-grid"></div>
-  <button class="generate-btn" id="state-next-btn" onclick="goToStyle()" disabled>Continue → Choose Your Food Style</button>
+<div class="card">
+<h2>Holiday Spotlight</h2>
+<p id="holiday-banner"></p>
 </div>
 
-<!-- S2: FOOD STYLE -->
-<div class="screen" id="screen-style">
-  <button class="back-btn" onclick="showScreen('screen-state',1)">← Back</button>
-  <h2 class="section-title" id="style-title">Choose your food style</h2>
-  <p class="section-sub" id="style-sub">Your region has strong food traditions. Pick one that matches your household's taste.</p>
-  <div class="style-grid" id="style-grid"></div>
-  <button class="generate-btn" onclick="showScreen('screen-persons',3)">Continue → Household Setup</button>
+<div class="card">
+<h2>Build Your Family Meal Plan</h2>
+<input type="email" id="email-input" placeholder="Enter your email to unlock grocery list" style="padding:10px;width:100%;margin-bottom:10px;">
+<button class="button" onclick="unlockGrocery()">Unlock Grocery List</button>
 </div>
 
-<!-- S3: HOUSEHOLD -->
-<div class="screen" id="screen-persons">
-  <button class="back-btn" onclick="showScreen('screen-style',2)">← Back</button>
-  <h2 class="section-title">Your household</h2>
-  <p class="section-sub">Add family members with any dietary needs. We'll personalize alternatives for each person.</p>
-  <div class="panel">
-    <div class="panel-header">
-      <span class="panel-title">👨‍👩‍👧 Family Members</span>
-      <button class="add-btn" onclick="addPerson()">+ Add Person</button>
-    </div>
-    <div class="person-col-headers">
-      <div class="col-label">Name</div>
-      <div class="col-label">Dietary Need</div>
-      <div class="col-label">Birthday</div>
-      <div class="col-label">Role</div>
-      <div></div>
-    </div>
-    <div id="persons-list"></div>
-  </div>
-  <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:1rem;flex-wrap:wrap">
-    <label class="field-label">Household size for grocery scaling:</label>
-    <select class="field-select" id="family-size" style="width:90px">
-      <option>1</option><option>2</option><option selected>3</option><option>4</option>
-      <option>5</option><option>6</option><option>7+</option>
-    </select>
-  </div>
-  <button class="generate-btn" onclick="showScreen('screen-prefs',4)">Continue → Goals & Preferences</button>
+<div class="card" id="grocery-section" style="display:none;">
+<div class="kid-print">🍎 USA Plate Kids Version 🍎</div>
+<h2>Grocery List</h2>
+<ul>
+<li>Chicken Breast (2 lb)</li>
+<li>Green Beans</li>
+<li>Potatoes</li>
+<li>Milk</li>
+<li>Bread</li>
+</ul>
+
+<div class="grocery-actions">
+<button class="button" onclick="window.open('https://www.amazon.com','_blank')">🛒 Shop on Amazon</button>
+<button class="button" onclick="window.open('https://www.walmart.com','_blank')">🏬 Add to Walmart Cart</button>
+<button class="button" onclick="window.open('https://www.instacart.com','_blank')">🥕 Order from Instacart</button>
+<button class="button" onclick="window.print()">🖨️ Print Plan + List</button>
 </div>
 
-<!-- S4: PREFS -->
-<div class="screen" id="screen-prefs">
-  <button class="back-btn" onclick="showScreen('screen-persons',3)">← Back</button>
-  <h2 class="section-title">Goals & preferences</h2>
-  <p class="section-sub">Tell us your health goals and eating style — we'll build your plan around them.</p>
-
-  <div class="meta-row">
-    <div class="field-group">
-      <label class="field-label">Month</label>
-      <select class="field-select" id="month-select">
-        <option>January</option><option>February</option><option>March</option><option>April</option>
-        <option>May</option><option>June</option><option>July</option><option>August</option>
-        <option>September</option><option>October</option><option>November</option><option>December</option>
-      </select>
-    </div>
-    <div class="field-group">
-      <label class="field-label">Year</label>
-      <select class="field-select" id="year-select">
-        <option>2025</option><option selected>2026</option><option>2027</option>
-      </select>
-    </div>
-    <div class="field-group">
-      <label class="field-label">Dining out frequency</label>
-      <select class="field-select" id="eatout-freq">
-        <option value="never">Never / Cook all meals</option>
-        <option value="weekend" selected>Weekends only</option>
-        <option value="weekly">Once a week</option>
-        <option value="twice">Twice a week</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="field-label" style="margin-bottom:.6rem">🎯 Health Goal</div>
-  <div class="goal-grid" id="goal-grid">
-    <div class="goal-chip selected" id="goal-balanced" onclick="selectGoal('balanced')"><div class="goal-icon">⚖️</div><div><div class="goal-label">Balanced</div><div class="goal-desc">Well-rounded nutrition, no restrictions</div></div></div>
-    <div class="goal-chip" id="goal-weightloss" onclick="selectGoal('weightloss')"><div class="goal-icon">🔥</div><div><div class="goal-label">Weight Loss</div><div class="goal-desc">Calorie deficit, high protein, lower carbs</div></div></div>
-    <div class="goal-chip" id="goal-muscle" onclick="selectGoal('muscle')"><div class="goal-icon">💪</div><div><div class="goal-label">Muscle Gain</div><div class="goal-desc">High protein, calorie surplus</div></div></div>
-    <div class="goal-chip" id="goal-heart" onclick="selectGoal('heart')"><div class="goal-icon">❤️</div><div><div class="goal-label">Heart Healthy</div><div class="goal-desc">Low sodium, healthy fats, fiber-rich</div></div></div>
-    <div class="goal-chip" id="goal-keto" onclick="selectGoal('keto')"><div class="goal-icon">🥑</div><div><div class="goal-label">Keto / Low-Carb</div><div class="goal-desc">Under 50g net carbs, high fat</div></div></div>
-    <div class="goal-chip" id="goal-mediterranean" onclick="selectGoal('mediterranean')"><div class="goal-icon">🫒</div><div><div class="goal-label">Mediterranean</div><div class="goal-desc">Olive oil, fish, legumes, whole grains</div></div></div>
-  </div>
-
-  <div class="field-label" style="margin-bottom:.6rem">🍽️ Dietary Type</div>
-  <div class="diet-grid" id="diet-grid">
-    <div class="diet-chip selected" id="diet-omnivore" onclick="selectDiet('omnivore')"><div class="diet-chip-icon">🍗</div><div class="diet-chip-label">Omnivore</div><div class="diet-chip-desc">Meat, fish, everything</div></div>
-    <div class="diet-chip" id="diet-vegetarian" onclick="selectDiet('vegetarian')"><div class="diet-chip-icon">🥦</div><div class="diet-chip-label">Vegetarian</div><div class="diet-chip-desc">No meat or fish</div></div>
-    <div class="diet-chip" id="diet-vegan" onclick="selectDiet('vegan')"><div class="diet-chip-icon">🌱</div><div class="diet-chip-label">Vegan</div><div class="diet-chip-desc">No animal products</div></div>
-    <div class="diet-chip" id="diet-glutenfree" onclick="selectDiet('glutenfree')"><div class="diet-chip-icon">🌾</div><div class="diet-chip-label">Gluten-Free</div><div class="diet-chip-desc">No wheat, barley, rye</div></div>
-    <div class="diet-chip" id="diet-dairyfree" onclick="selectDiet('dairyfree')"><div class="diet-chip-icon">🥛</div><div class="diet-chip-label">Dairy-Free</div><div class="diet-chip-desc">No milk products</div></div>
-    <div class="diet-chip" id="diet-pescatarian" onclick="selectDiet('pescatarian')"><div class="diet-chip-icon">🐟</div><div class="diet-chip-label">Pescatarian</div><div class="diet-chip-desc">Fish but no meat</div></div>
-  </div>
-
-  <div class="field-label" style="margin-bottom:.5rem">🔧 Options</div>
-  <div class="options-grid" id="options-grid">
-    <div class="opt-card" id="opt-mealprep" onclick="toggleOpt('mealprep')"><span class="opt-icon">🥡</span> Sunday Meal Prep Mode</div>
-    <div class="opt-card" id="opt-holidays" onclick="toggleOpt('holidays')"><span class="opt-icon">🎆</span> US Holiday Menus</div>
-    <div class="opt-card" id="opt-snacks" onclick="toggleOpt('snacks')"><span class="opt-icon">🥨</span> Include Snacks</div>
-    <div class="opt-card" id="opt-leftovers" onclick="toggleOpt('leftovers')"><span class="opt-icon">♻️</span> Use Leftovers</div>
-    <div class="opt-card" id="opt-budget" onclick="toggleOpt('budget')"><span class="opt-icon">💰</span> Budget-Conscious</div>
-    <div class="opt-card" id="opt-quick" onclick="toggleOpt('quick')"><span class="opt-icon">⚡</span> 30-Min Meals Only</div>
-  </div>
-
-  <button class="generate-btn" id="gen-btn" onclick="generatePlan()">✨ Generate My Meal Plan</button>
+<div class="disclosure">
+Affiliate Disclosure: USA Plate may earn commissions from qualifying purchases made through these links.
 </div>
 
-<!-- S5: PLAN -->
-<div class="screen" id="screen-plan">
-  <button class="back-btn" onclick="showScreen('screen-prefs',4)">← Edit Preferences</button>
-  <div class="badge-row" id="plan-badges"></div>
-
-  <div class="plan-layout">
-    <div>
-      <div class="plan-toolbar">
-        <div class="toolbar-left">
-          <div class="view-toggle">
-            <button class="view-btn active" id="vbtn-week" onclick="switchView('week')">📋 Weekly</button>
-            <button class="view-btn" id="vbtn-month" onclick="switchView('month')">📅 Monthly</button>
-          </div>
-          <span class="view-label" id="view-label">Week 1</span>
-        </div>
-        <div style="display:flex;gap:.4rem">
-          <button class="nav-btn" id="prev-btn" onclick="navigate(-1)" disabled>← Prev</button>
-          <button class="nav-btn" id="next-btn" onclick="navigate(1)">Next →</button>
-        </div>
-      </div>
-      <div class="legend" id="legend-row"></div>
-      <div class="prep-mode-banner hidden" id="prep-banner">
-        <span class="prep-mode-icon">🥡</span>
-        <span class="prep-mode-text"><strong>Meal Prep Sunday active:</strong> Sundays show batch-cooking sessions. Ingredients prepped on Sunday carry through the week — saving you ~3 hrs of weeknight cooking.</span>
-      </div>
-      <div id="week-view"></div>
-      <div id="month-view" style="display:none"></div>
-    </div>
-
-    <div>
-      <!-- BUDGET -->
-      <div class="budget-panel" id="budget-panel">
-        <div class="budget-title">💵 Monthly Food Budget</div>
-        <div class="budget-tier-row">
-          <button class="budget-tier" id="bt-thrifty" onclick="setBudgetTier('thrifty')">🏷️ Thrifty</button>
-          <button class="budget-tier active" id="bt-moderate" onclick="setBudgetTier('moderate')">🛒 Moderate</button>
-          <button class="budget-tier" id="bt-liberal" onclick="setBudgetTier('liberal')">🛍️ Liberal</button>
-        </div>
-        <div class="budget-totals">
-          <div class="budget-item"><div class="budget-item-label">Monthly Total</div><div class="budget-item-val" id="b-monthly">$0</div><div class="budget-item-sub" id="b-family-note">for family</div></div>
-          <div class="budget-item"><div class="budget-item-label">Per Person / Day</div><div class="budget-item-val" id="b-perday">$0</div><div class="budget-item-sub">avg all meals</div></div>
-        </div>
-        <div id="budget-breakdown"></div>
-        <div class="budget-tip" id="budget-tip"></div>
-      </div>
-
-      <!-- SEASON -->
-      <div class="season-banner hidden" id="season-banner"></div>
-
-      <!-- MACRO PANEL -->
-      <div class="macro-panel" id="macro-panel">
-        <div class="macro-title">📊 This Week's Macro Split</div>
-        <div class="macro-week-bars" id="macro-bars"></div>
-      </div>
-
-      <!-- GROCERY -->
-      <div class="grocery-panel">
-        <div class="grocery-header"><h3>🛒 Grocery List</h3><span class="grocery-scope-badge" id="grocery-scope">This Week</span></div>
-        <div class="grocery-body" id="grocery-body"></div>
-        <div class="grocery-tip-box"><div class="grocery-tip-title">💡 Tip</div><div class="grocery-tip-text" id="shopping-tip"></div></div>
-        <div class="grocery-actions">
-          <button class="grocery-btn green" onclick="copyGrocery()">📋 Copy to Clipboard</button>
-          <button class="grocery-btn" onclick="shareWA()">💬 Share via Text/WhatsApp</button>
-          <button class="grocery-btn" onclick="resetChecks()">↺ Reset Checklist</button>
-          <button class="grocery-btn dark" onclick="window.print()">🖨️ Print Plan + List</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
-</main>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal">
-    <div class="modal-header"><span class="modal-title" id="modal-title">Day Detail</span><button class="modal-close" onclick="closeModalDirect()">×</button></div>
-    <div class="modal-body" id="modal-body"></div>
-  </div>
 </div>
-<div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════ DATA ══════════════════
 
-const STATES=["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
-
-const ZONE_MAP={
-  northeast:["Connecticut","Delaware","Maine","Maryland","Massachusetts","New Hampshire","New Jersey","New York","Pennsylvania","Rhode Island","Vermont"],
-  south:["Alabama","Arkansas","Florida","Georgia","Kentucky","Louisiana","Mississippi","North Carolina","South Carolina","Tennessee","Virginia","West Virginia"],
-  midwest:["Illinois","Indiana","Iowa","Kansas","Michigan","Minnesota","Missouri","Nebraska","North Dakota","Ohio","South Dakota","Wisconsin"],
-  southwest:["Arizona","New Mexico","Oklahoma","Texas"],
-  west:["Colorado","Idaho","Montana","Nevada","Utah","Wyoming"],
-  pacific:["Alaska","California","Hawaii","Oregon","Washington"]
-};
-
-const STATE_ICON={
-  "Alabama":"🍑","Alaska":"🐻","Arizona":"🌵","Arkansas":"🌾","California":"🌴","Colorado":"⛷️",
-  "Connecticut":"🦞","Delaware":"🍺","Florida":"🌞","Georgia":"🍑","Hawaii":"🌺","Idaho":"🥔",
-  "Illinois":"🌆","Indiana":"🏎️","Iowa":"🌽","Kansas":"🌻","Kentucky":"🐴","Louisiana":"🎷",
-  "Maine":"🦞","Maryland":"🦀","Massachusetts":"🦃","Michigan":"🏒","Minnesota":"🌊","Mississippi":"🎸",
-  "Missouri":"🌉","Montana":"🦌","Nebraska":"🌾","Nevada":"🎰","New Hampshire":"🍁","New Jersey":"🍕",
-  "New Mexico":"🌶️","New York":"🗽","North Carolina":"🍗","North Dakota":"🌾","Ohio":"🏈","Oklahoma":"🌪️",
-  "Oregon":"🌲","Pennsylvania":"🔔","Rhode Island":"⚓","South Carolina":"🏖️","South Dakota":"🦅",
-  "Tennessee":"🎸","Texas":"🤠","Utah":"🏜️","Vermont":"🍁","Virginia":"🦀","Washington":"🌲",
-  "West Virginia":"⛰️","Wisconsin":"🧀","Wyoming":"🦬"
-};
-
-const STATE_REGION={
-  "Alabama":"south","Alaska":"pacific","Arizona":"southwest","Arkansas":"south","California":"pacific",
-  "Colorado":"west","Connecticut":"northeast","Delaware":"northeast","Florida":"south","Georgia":"south",
-  "Hawaii":"pacific","Idaho":"west","Illinois":"midwest","Indiana":"midwest","Iowa":"midwest",
-  "Kansas":"midwest","Kentucky":"south","Louisiana":"south","Maine":"northeast","Maryland":"northeast",
-  "Massachusetts":"northeast","Michigan":"midwest","Minnesota":"midwest","Mississippi":"south",
-  "Missouri":"midwest","Montana":"west","Nebraska":"midwest","Nevada":"west","New Hampshire":"northeast",
-  "New Jersey":"northeast","New Mexico":"southwest","New York":"northeast","North Carolina":"south",
-  "North Dakota":"midwest","Ohio":"midwest","Oklahoma":"southwest","Oregon":"pacific",
-  "Pennsylvania":"northeast","Rhode Island":"northeast","South Carolina":"south","South Dakota":"midwest",
-  "Tennessee":"south","Texas":"southwest","Utah":"west","Vermont":"northeast","Virginia":"south",
-  "Washington":"pacific","West Virginia":"south","Wisconsin":"midwest","Wyoming":"west"
-};
-
-// GEO bounds for US state detection
-const GEO_STATES=[
-  {s:"Alaska",lat:[54,72],lng:[-168,-130]},
-  {s:"Hawaii",lat:[18,23],lng:[-161,-154]},
-  {s:"Washington",lat:[45,49],lng:[-124,-117]},
-  {s:"Oregon",lat:[42,46],lng:[-124,-116]},
-  {s:"California",lat:[32,42],lng:[-124,-114]},
-  {s:"Nevada",lat:[35,42],lng:[-120,-114]},
-  {s:"Idaho",lat:[42,49],lng:[-117,-111]},
-  {s:"Montana",lat:[44,49],lng:[-116,-104]},
-  {s:"Wyoming",lat:[41,45],lng:[-111,-104]},
-  {s:"Colorado",lat:[37,41],lng:[-109,-102]},
-  {s:"Utah",lat:[37,42],lng:[-114,-109]},
-  {s:"Arizona",lat:[31,37],lng:[-114,-109]},
-  {s:"New Mexico",lat:[31,37],lng:[-109,-103]},
-  {s:"Texas",lat:[26,36],lng:[-106,-94]},
-  {s:"North Dakota",lat:[46,49],lng:[-104,-97]},
-  {s:"South Dakota",lat:[43,46],lng:[-104,-96]},
-  {s:"Nebraska",lat:[40,43],lng:[-104,-95]},
-  {s:"Kansas",lat:[37,40],lng:[-102,-94]},
-  {s:"Oklahoma",lat:[34,37],lng:[-103,-94]},
-  {s:"Minnesota",lat:[43,49],lng:[-97,-89]},
-  {s:"Iowa",lat:[40,43],lng:[-96,-90]},
-  {s:"Missouri",lat:[36,40],lng:[-95,-89]},
-  {s:"Arkansas",lat:[33,36],lng:[-94,-89]},
-  {s:"Louisiana",lat:[29,33],lng:[-94,-89]},
-  {s:"Wisconsin",lat:[42,47],lng:[-92,-86]},
-  {s:"Illinois",lat:[37,42],lng:[-91,-87]},
-  {s:"Michigan",lat:[41,47],lng:[-90,-82]},
-  {s:"Indiana",lat:[38,42],lng:[-88,-84]},
-  {s:"Mississippi",lat:[30,35],lng:[-91,-88]},
-  {s:"Ohio",lat:[38,42],lng:[-85,-80]},
-  {s:"Kentucky",lat:[36,39],lng:[-89,-82]},
-  {s:"Tennessee",lat:[35,36],lng:[-90,-81]},
-  {s:"Alabama",lat:[30,35],lng:[-88,-85]},
-  {s:"Georgia",lat:[30,35],lng:[-85,-81]},
-  {s:"Florida",lat:[25,31],lng:[-87,-80]},
-  {s:"South Carolina",lat:[32,35],lng:[-83,-78]},
-  {s:"North Carolina",lat:[34,36],lng:[-84,-75]},
-  {s:"Virginia",lat:[36,39],lng:[-83,-75]},
-  {s:"West Virginia",lat:[37,40],lng:[-82,-77]},
-  {s:"Pennsylvania",lat:[39,42],lng:[-80,-74]},
-  {s:"New York",lat:[40,45],lng:[-79,-71]},
-  {s:"Maryland",lat:[38,39],lng:[-79,-75]},
-  {s:"Delaware",lat:[38,40],lng:[-76,-75]},
-  {s:"New Jersey",lat:[38,41],lng:[-75,-73]},
-  {s:"Connecticut",lat:[41,42],lng:[-74,-71]},
-  {s:"Rhode Island",lat:[41,42],lng:[-72,-71]},
-  {s:"Massachusetts",lat:[41,43],lng:[-73,-70]},
-  {s:"Vermont",lat:[43,45],lng:[-73,-72]},
-  {s:"New Hampshire",lat:[43,45],lng:[-72,-71]},
-  {s:"Maine",lat:[43,48],lng:[-71,-67]},
+// Weekly Family Theme
+const themes = [
+"🍝 Italian Family Night",
+"🌮 Taco Tuesday",
+"🍔 Classic American BBQ",
+"🍗 Southern Comfort Sunday",
+"🥞 Breakfast-for-Dinner Friday"
 ];
 
-// CUISINE STYLES per region
-const STYLE_DATA={
-  northeast:{
-    styles:[
-      {id:"ne-classic",icon:"🦞",name:"New England Classic",accent:"#1A5F8A",desc:"Clam chowder, lobster rolls, baked beans, maple syrup, apple cider",dishes:"Boston · Maine · Vermont traditions"},
-      {id:"ne-italian",icon:"🍕",name:"Italian-American",accent:"#C8293C",desc:"Sunday gravy, pizza, pasta, hoagies, deli sandwiches",dishes:"New York · New Jersey classics"},
-      {id:"ne-modern",icon:"🥗",name:"Modern Healthy",accent:"#1A6B4A",desc:"Farm-to-table, avocado toast, grain bowls, cold brew",dishes:"Brooklyn · Boston food scene"},
-    ]
-  },
-  south:{
-    styles:[
-      {id:"s-bbq",icon:"🍖",name:"Southern BBQ",accent:"#C8293C",desc:"Smoked brisket, pulled pork, ribs, cornbread, collard greens, mac & cheese",dishes:"Texas · Carolina · Memphis pits"},
-      {id:"s-comfort",icon:"🍗",name:"Southern Comfort",accent:"#D4A843",desc:"Fried chicken, biscuits & gravy, shrimp & grits, sweet potato pie",dishes:"Georgia · Alabama · Mississippi"},
-      {id:"s-cajun",icon:"🎷",name:"Cajun & Creole",accent:"#1A5F8A",desc:"Gumbo, jambalaya, crawfish étouffée, beignets, po'boys",dishes:"Louisiana · New Orleans"},
-    ]
-  },
-  midwest:{
-    styles:[
-      {id:"mw-comfort",icon:"🌽",name:"Heartland Comfort",accent:"#D4A843",desc:"Pot roast, casseroles, chili, corn on the cob, state fair food",dishes:"Ohio · Indiana · Iowa classics"},
-      {id:"mw-german",icon:"🥨",name:"German-American",accent:"#1A5F8A",desc:"Bratwurst, schnitzel, sauerkraut, potato salad, beer cheese soup",dishes:"Wisconsin · Minnesota heritage"},
-      {id:"mw-modern",icon:"🍔",name:"Classic American",accent:"#C8293C",desc:"Burgers, hot dogs, meatloaf, Jell-O salads, apple pie",dishes:"America's heartland staples"},
-    ]
-  },
-  southwest:{
-    styles:[
-      {id:"sw-texmex",icon:"🌮",name:"Tex-Mex",accent:"#C8293C",desc:"Fajitas, tacos, enchiladas, queso, breakfast tacos, brisket",dishes:"Texas · New Mexico border food"},
-      {id:"sw-bbq",icon:"🤠",name:"Texas BBQ",accent:"#D4A843",desc:"Brisket, beef ribs, sausage links, peach cobbler, jalapeño cornbread",dishes:"Central Texas pit tradition"},
-      {id:"sw-pueblo",icon:"🌵",name:"Southwestern",accent:"#1A5F8A",desc:"Green chile stew, Navajo fry bread, posole, sopapillas",dishes:"New Mexico · Arizona traditions"},
-    ]
-  },
-  west:{
-    styles:[
-      {id:"w-mountain",icon:"⛷️",name:"Mountain Hearty",accent:"#1A5F8A",desc:"Elk burgers, trout, bison chili, campfire potatoes, s'mores",dishes:"Colorado · Montana · Idaho"},
-      {id:"w-western",icon:"🤠",name:"Western Ranch",accent:"#D4A843",desc:"Steak, grilled corn, cowboy beans, Dutch oven cooking",dishes:"Wyoming · Nevada · Utah ranches"},
-    ]
-  },
-  pacific:{
-    styles:[
-      {id:"p-cali",icon:"🥑",name:"California Fresh",accent:"#1A6B4A",desc:"Avocado toast, poke bowls, farm salads, In-N-Out style, wine country food",dishes:"LA · San Francisco · Napa Valley"},
-      {id:"p-pacific",icon:"🐟",name:"Pacific Northwest",accent:"#1A5F8A",desc:"Salmon, Dungeness crab, geoduck, foraged mushrooms, craft beer",dishes:"Seattle · Portland · Oregon coast"},
-      {id:"p-hawaiian",icon:"🌺",name:"Hawaiian / Asian Fusion",accent:"#C8293C",desc:"Plate lunch, spam musubi, poke, kalua pork, shave ice",dishes:"Hawaii · Pacific Rim influence"},
-    ]
-  }
-};
+document.getElementById("family-theme").innerText =
+"🎉 This Week's Family Dinner Theme: " + themes[Math.floor(Math.random()*themes.length)];
 
-// MEALS by style
-const MEALS={
-  "ne-classic":{
-    breakfast:[{m:"Blueberry Pancakes",s:"Vermont maple syrup + butter",cal:450,p:12,c:72,f:14},{m:"Eggs Benedict",s:"Canadian bacon + hollandaise",cal:520,p:22,c:28,f:38},{m:"Oatmeal",s:"Brown sugar + raisins + walnuts",cal:380,p:11,c:58,f:10},{m:"Bagel with Lox",s:"Cream cheese + capers + red onion",cal:430,p:18,c:52,f:16},{m:"French Toast",s:"Maple syrup + powdered sugar",cal:420,p:14,c:66,f:12},{m:"Apple Cider Donuts",s:"Cinnamon sugar",cal:390,p:6,c:58,f:15},{m:"Avocado Toast",s:"Everything bagel seasoning + fried egg",cal:380,p:15,c:38,f:20}],
-    lunch:[{m:"New England Clam Chowder",s:"Oyster crackers + sourdough bowl",cal:520,p:18,c:48,f:26},{m:"Lobster Roll",s:"Butter-toasted split-top bun + chips",cal:580,p:28,c:42,f:30},{m:"BLT Sandwich",s:"Thick-cut bacon + tomato + lettuce + mayo",cal:490,p:20,c:38,f:28},{m:"Cobb Salad",s:"Blue cheese dressing + croutons",cal:520,p:32,c:18,f:36},{m:"Turkey Club",s:"Swiss + avocado + toasted sourdough",cal:540,p:34,c:42,f:22},{m:"Yankee Pot Roast",s:"Root vegetables + gravy",cal:580,p:38,c:32,f:24},{m:"Grilled Salmon",s:"Lemon dill + roasted asparagus",cal:490,p:42,c:12,f:26}],
-    dinner:[{m:"Baked Cod",s:"Panko crust + tartar sauce + coleslaw",cal:520,p:36,c:34,f:22},{m:"Pot Roast",s:"Carrots + potatoes + onion gravy",cal:580,p:40,c:38,f:22},{m:"Clam Bake",s:"Lobster + clams + corn + potatoes",cal:620,p:48,c:42,f:20},{m:"Shepherd's Pie",s:"Ground lamb + mashed potato topping",cal:540,p:30,c:44,f:22},{m:"Roast Chicken",s:"Thyme + garlic + roasted vegetables",cal:560,p:44,c:18,f:28},{m:"Boiled Dinner",s:"Corned beef + cabbage + potatoes",cal:520,p:36,c,f:22},{m:"Baked Ham",s:"Brown sugar glaze + green beans + rolls",cal:540,p:38,c:44,f:18}],
-    snack:[{m:"Apple Slices",s:"Peanut butter",cal:220,p:6,c:28,f:12},{m:"Cheese & Crackers",s:"Vermont cheddar + wheat thins",cal:280,p:10,c:22,f:18},{m:"Trail Mix",s:"Nuts + dried cranberries + chocolate chips",cal:310,p:8,c:34,f:18},{m:"Pumpkin Muffin",s:"",cal:250,p:4,c:40,f:9}]
-  },
-  "ne-italian":{
-    breakfast:[{m:"Eggs & Toast",s:"Scrambled eggs + Italian bread + butter",cal:420,p:18,c:42,f:18},{m:"Ricotta Toast",s:"Honey + fresh berries + lemon zest",cal:380,p:14,c:48,f:14},{m:"Frittata",s:"Peppers + onion + mozzarella",cal:440,p:24,c:12,f:32},{m:"Cannoli French Toast",s:"Mascarpone + chocolate chips + honey",cal:510,p:16,c:62,f:22},{m:"Espresso + Biscotti",s:"Almond biscotti",cal:280,p:8,c:42,f:8},{m:"Bagel Sandwich",s:"Egg + prosciutto + provolone",cal:480,p:24,c:48,f:20},{m:"Greek Yogurt Bowl",s:"Granola + honey + walnuts",cal:380,p:18,c:48,f:12}],
-    lunch:[{m:"Chicken Parm Sub",s:"Marinara + melted mozzarella + Italian hero",cal:620,p:36,c:58,f:26},{m:"Pasta Fagioli",s:"Crusty bread for dipping",cal:480,p:18,c:64,f:14},{m:"Italian Hoagie",s:"Salami + capicola + provolone + peppers",cal:580,p:28,c:48,f:30},{m:"Caesar Salad",s:"Anchovy dressing + parmesan + croutons",cal:420,p:14,c:28,f:28},{m:"Meatball Sub",s:"Sunday gravy + fresh basil + parmesan",cal:640,p:34,c:62,f:26},{m:"Baked Ziti",s:"Ricotta + sausage + mozzarella",cal:580,p:28,c:62,f:24},{m:"Minestrone",s:"Parmesan rind broth + garlic bread",cal:380,p:16,c:52,f:12}],
-    dinner:[{m:"Sunday Gravy",s:"Spaghetti + meatballs + sausage + garlic bread",cal:720,p:38,c:72,f:28},{m:"Chicken Cacciatore",s:"Peppers + mushrooms + white wine + polenta",cal:540,p:42,c:32,f:24},{m:"Veal Marsala",s:"Egg noodles + roasted broccoli",cal:580,p:38,c:42,f:24},{m:"Shrimp Scampi",s:"Linguine + white wine + lemon + capers",cal:540,p:32,c:52,f:22},{m:"Chicken Piccata",s:"Lemon caper sauce + angel hair pasta",cal:520,p:40,c:42,f:20},{m:"Osso Buco",s:"Gremolata + saffron risotto",cal:640,p:44,c:48,f:26},{m:"Eggplant Parm",s:"Marinara + fresh mozzarella + basil + salad",cal:480,p:22,c:44,f:24}],
-    snack:[{m:"Caprese Skewers",s:"Fresh mozzarella + cherry tomato + basil",cal:220,p:12,c:8,f:16},{m:"Olives + Cheese",s:"Castelvetrano olives + pecorino",cal:260,p:8,c:6,f:22},{m:"Arancini",s:"Fried risotto ball",cal:290,p:8,c:38,f:12},{m:"Bruschetta",s:"Roma tomato + garlic + basil + EVOO",cal:210,p:6,c:28,f:8}]
-  },
-  "ne-modern":{
-    breakfast:[{m:"Avocado Toast",s:"Poached egg + everything bagel seasoning + microgreens",cal:380,p:14,c:38,f:20},{m:"Açaí Bowl",s:"Granola + banana + honey + chia seeds",cal:420,p:10,c:68,f:12},{m:"Green Smoothie",s:"Spinach + banana + almond butter + oat milk",cal:340,p:12,c:48,f:12},{m:"Overnight Oats",s:"Chia + almond milk + mixed berries",cal:360,p:12,c:58,f:10},{m:"Grain Bowl Breakfast",s:"Farro + roasted veggies + soft-boiled egg",cal:440,p:20,c:52,f:16},{m:"Smoked Salmon Plate",s:"Cream cheese + cucumber + capers + rye crisps",cal:380,p:24,c:22,f:18},{m:"Yogurt Parfait",s:"Chobani + local granola + seasonal berries",cal:340,p:18,c:48,f:8}],
-    lunch:[{m:"Buddha Bowl",s:"Quinoa + roasted chickpeas + tahini + kale",cal:480,p:18,c:62,f:18},{m:"Grain Salad",s:"Farro + roasted beets + goat cheese + walnuts",cal:440,p:16,c:52,f:20},{m:"Chicken Shawarma Wrap",s:"Greek yogurt + cucumber + pita",cal:520,p:32,c:52,f:18},{m:"Lentil Soup",s:"Crusty sourdough + olive oil drizzle",cal:400,p:18,c:58,f:10},{m:"Tuna Nicoise",s:"Haricots verts + olives + egg + potatoes",cal:460,p:30,c:28,f:22},{m:"Veggie Burger",s:"Whole wheat bun + sweet potato fries",cal:520,p:20,c:68,f:16},{m:"Power Salad",s:"Salmon + quinoa + arugula + lemon vinaigrette",cal:480,p:36,c:28,f:22}],
-    dinner:[{m:"Sheet Pan Salmon",s:"Roasted asparagus + cherry tomatoes + lemon",cal:480,p:40,c:18,f:24},{m:"Mushroom Risotto",s:"Parmesan + truffle oil + arugula salad",cal:520,p:16,c:68,f:18},{m:"Turkey Meatballs",s:"Zucchini noodles + marinara + parmesan",cal:440,p:34,c:28,f:20},{m:"Baked Chicken",s:"Za'atar + lemon + roasted cauliflower + hummus",cal:460,p:42,c:18,f:20},{m:"Vegetable Curry",s:"Chickpeas + brown rice + naan",cal:480,p:16,c:68,f:16},{m:"Seared Scallops",s:"Corn succotash + brown butter + microgreens",cal:440,p:30,c:28,f:20},{m:"Stuffed Bell Peppers",s:"Ground turkey + farro + goat cheese",cal:460,p:32,c:38,f:18}],
-    snack:[{m:"Apple + Almond Butter",s:"",cal:220,p:6,c:28,f:12},{m:"Hummus + Veggies",s:"Carrots + celery + cucumber",cal:180,p:8,c:22,f:8},{m:"Kind Bar",s:"Dark chocolate nuts + sea salt",cal:200,p:6,c:22,f:12},{m:"Greek Yogurt",s:"Honey + pumpkin seeds",cal:200,p:16,c:22,f:4}]
-  },
-  "s-bbq":{
-    breakfast:[{m:"Biscuits & Gravy",s:"Flaky buttermilk biscuits + sausage cream gravy",cal:580,p:18,c:58,f:32},{m:"Country Ham & Eggs",s:"Grits + red-eye gravy + toast",cal:540,p:28,c:42,f:28},{m:"Fried Egg Sandwich",s:"Texas toast + pimento cheese + bacon",cal:560,p:22,c:44,f:32},{m:"Pancakes",s:"Pecan butter + cane syrup",cal:480,p:12,c:68,f:18},{m:"Kolache",s:"Sausage + jalapeño + cheese pastry",cal:420,p:16,c:48,f:18},{m:"Breakfast Tacos",s:"Scrambled egg + chorizo + cheese + salsa",cal:480,p:22,c:44,f:24},{m:"Avocado + Egg",s:"Everything toast + hot sauce",cal:380,p:16,c:36,f:20}],
-    lunch:[{m:"Brisket Plate",s:"Pinto beans + coleslaw + pickles + white bread",cal:680,p:48,c:42,f:34},{m:"Pulled Pork Sandwich",s:"Carolina vinegar slaw + pickle chips",cal:620,p:38,c:52,f:26},{m:"Smoked Sausage",s:"Mustard + sauerkraut + potato salad",cal:580,p:28,c:40,f:34},{m:"BBQ Chicken Plate",s:"Jalapeño cornbread + collard greens",cal:640,p:44,c:48,f:26},{m:"Beef Ribs",s:"Pickled onions + white bread + sauce",cal:720,p:48,c:28,f:48},{m:"Hot Links",s:"Saltines + dill pickles + onion",cal:520,p:24,c:22,f:36},{m:"Chili",s:"Cheddar + sour cream + cornbread",cal:560,p:28,c:44,f:26}],
-    dinner:[{m:"Smoked Brisket",s:"Jalapeño mac & cheese + green beans",cal:720,p:52,c:44,f:38},{m:"BBQ Baby Back Ribs",s:"Corn on the cob + baked beans",cal:780,p:48,c:48,f:42},{m:"Smoked Chicken",s:"Collard greens + candied yams",cal:620,p:44,c:52,f:26},{m:"Beef Brisket Tacos",s:"Pickled jalapeños + queso fresco + pico",cal:580,p:36,c:48,f:24},{m:"Texas Chili con Carne",s:"Cornbread + shredded cheddar",cal:580,p:32,c:44,f:28},{m:"Smoked Turkey",s:"Dressing + cranberry sauce + sweet potato",cal:620,p:48,c:52,f:22},{m:"Pulled Pork Nachos",s:"Black beans + pico + sour cream + guac",cal:680,p:32,c:58,f:36}],
-    snack:[{m:"Pork Rinds",s:"Hot sauce",cal:180,p:16,c:0,f:12},{m:"Jalapeño Poppers",s:"Cream cheese + bacon wrapped",cal:280,p:10,c:8,f:22},{m:"Deviled Eggs",s:"Paprika + relish",cal:180,p:10,c:4,f:14},{m:"Smoked Pecans",s:"Brown sugar + cayenne",cal:260,p:4,c:12,f:22}]
-  },
-  "s-comfort":{
-    breakfast:[{m:"Fried Chicken & Waffles",s:"Maple syrup + hot sauce + butter",cal:680,p:36,c:72,f:28},{m:"Shrimp & Grits",s:"Cheddar grits + andouille + tasso gravy",cal:580,p:28,c:52,f:28},{m:"Country Breakfast",s:"Eggs + sausage patties + biscuit + gravy",cal:620,p:26,c:48,f:36},{m:"Sweet Potato Pancakes",s:"Cinnamon butter + pecan syrup",cal:520,p:12,c:72,f:18},{m:"Grits Bowl",s:"Fried egg + bacon + cheddar + jalapeño",cal:480,p:22,c:44,f:24},{m:"Cornbread French Toast",s:"Honey butter + crispy bacon",cal:540,p:18,c:64,f:22},{m:"Peach Smoothie",s:"Frozen peach + yogurt + honey + ginger",cal:320,p:10,c:58,f:4}],
-    lunch:[{m:"Fried Chicken Plate",s:"Mashed potatoes + corn + biscuit",cal:680,p:44,c:58,f:32},{m:"Chicken & Dumplings",s:"Southern style + biscuit dumplings",cal:560,p:32,c:52,f:22},{m:"Po'Boy",s:"Fried shrimp + remoulade + lettuce + tomato",cal:580,p:26,c:62,f:26},{m:"Brunswick Stew",s:"Smoked chicken + lima beans + cornbread",cal:480,p:28,c:52,f:16},{m:"Pimento Cheese Sandwich",s:"Duke's mayo + white bread + sweet pickle",cal:460,p:16,c:44,f:26},{m:"Hoppin' John",s:"Black-eyed peas + rice + collards + cornbread",cal:480,p:18,c:72,f:12},{m:"Catfish Plate",s:"Cornmeal fried + hush puppies + coleslaw",cal:560,p:32,c:52,f:24}],
-    dinner:[{m:"Sunday Pot Roast",s:"Carrots + potatoes + onion + gravy + rolls",cal:640,p:44,c:48,f:28},{m:"Southern Fried Chicken",s:"Buttermilk brine + honey + waffles",cal:680,p:40,c:62,f:32},{m:"Shrimp & Grits",s:"Cheesy grits + tasso ham + tomato sauce",cal:540,p:30,c:52,f:24},{m:"BBQ Meatloaf",s:"Brown gravy + mashed potatoes + green beans",cal:580,p:32,c:46,f:28},{m:"Chicken Fried Steak",s:"White gravy + green beans + mashed potatoes",cal:680,p:34,c:52,f:38},{m:"Shrimp Étouffée",s:"Cajun butter sauce + white rice",cal:540,p:28,c:52,f:24},{m:"Pork Tenderloin",s:"Bourbon glaze + sweet potato mash + okra",cal:560,p:42,c:48,f:20}],
-    snack:[{m:"Boiled Peanuts",s:"Cajun seasoned",cal:200,p:10,c:16,f:12},{m:"Peach Cobbler",s:"Vanilla ice cream",cal:360,p:4,c:52,f:16},{m:"Fried Okra",s:"Comeback sauce",cal:220,p:4,c:26,f:12},{m:"Cheese Straws",s:"Sharp cheddar + cayenne",cal:180,p:6,c:16,f:12}]
-  },
-  "s-cajun":{
-    breakfast:[{m:"Beignets",s:"Powdered sugar + café au lait",cal:440,p:8,c:64,f:18},{m:"Egg & Andouille Scramble",s:"Creole seasoning + grits",cal:520,p:26,c:38,f:28},{m:"Pain Perdu",s:"Louisiana French toast + cane syrup",cal:480,p:14,c:64,f:18},{m:"Boudin Balls",s:"Creole mustard",cal:420,p:18,c:44,f:20},{m:"Red Beans & Rice",s:"Poached egg on top",cal:480,p:22,c:68,f:12},{m:"Grillades & Grits",s:"Slow-cooked beef + Creole gravy",cal:540,p:30,c:48,f:22},{m:"Banana Foster Pancakes",s:"Rum caramel + banana",cal:560,p:12,c:72,f:22}],
-    lunch:[{m:"Chicken & Sausage Gumbo",s:"Filé powder + white rice + potato salad",cal:580,p:36,c:48,f:24},{m:"Crawfish Étouffée",s:"Butter + holy trinity + white rice",cal:540,p:28,c:52,f:22},{m:"Muffuletta",s:"Olive salad + Italian meats + round sesame loaf",cal:620,p:28,c:52,f:34},{m:"Red Beans & Rice",s:"Smoked sausage + French bread",cal:520,p:24,c:68,f:16},{m:"Catfish Po'Boy",s:"Cornmeal fried + remoulade + pickle",cal:560,p:28,c:58,f:24},{m:"Boudin Sandwich",s:"Griddled boudin + pepper jelly + bun",cal:520,p:22,c:52,f:24},{m:"Oyster Loaf",s:"Fried oysters + lettuce + hot sauce + French bread",cal:580,p:24,c:58,f:28}],
-    dinner:[{m:"Shrimp Gumbo",s:"Okra + filé + Creole seasoning + white rice",cal:520,p:32,c:48,f:18},{m:"Crawfish Boil",s:"Corn + potatoes + andouille + Old Bay",cal:580,p:40,c:52,f:18},{m:"Chicken Jambalaya",s:"Holy trinity + Creole rice + andouille",cal:560,p:34,c:58,f:18},{m:"Blackened Redfish",s:"Dirty rice + stewed tomatoes + okra",cal:500,p:38,c:42,f:20},{m:"Turtle Soup",s:"Sherry + roux + hardboiled egg + French bread",cal:480,p:28,c:32,f:22},{m:"Shrimp Creole",s:"Tomato sauce + holy trinity + white rice",cal:480,p:30,c:52,f:14},{m:"Cochon de Lait",s:"Roasted suckling pig + mirliton slaw + dirty rice",cal:640,p:48,c:44,f:32}],
-    snack:[{m:"Cracklins",s:"Cajun seasoned pork rinds",cal:200,p:14,c:2,f:14},{m:"Boiled Shrimp",s:"Cocktail sauce + lemon",cal:180,p:22,c:8,f:2},{m:"King Cake Slice",s:"Cream cheese filling",cal:320,p:6,c:48,f:12},{m:"Corn Maque Choux",s:"Butter + jalapeño",cal:200,p:4,c:28,f:8}]
-  },
-  "mw-comfort":{
-    breakfast:[{m:"Pancakes & Bacon",s:"Real maple syrup + whipped butter",cal:520,p:18,c:68,f:22},{m:"Egg Casserole",s:"Hash browns + sausage + cheddar + peppers",cal:560,p:26,c:44,f:32},{m:"Cinnamon Rolls",s:"Cream cheese frosting + coffee",cal:480,p:8,c:72,f:18},{m:"Scrambled Eggs",s:"Toast + OJ + crispy bacon",cal:420,p:22,c:32,f:22},{m:"Breakfast Burrito",s:"Eggs + sausage + cheese + salsa",cal:520,p:24,c:52,f:24},{m:"Oatmeal",s:"Apples + cinnamon + brown sugar + cream",cal:380,p:10,c:62,f:10},{m:"Egg McMuffin-Style",s:"English muffin + egg + Canadian bacon + American cheese",cal:380,p:20,c:38,f:16}],
-    lunch:[{m:"Chili",s:"Shredded cheddar + sour cream + Fritos",cal:560,p:28,c:44,f:28},{m:"Beef Stew",s:"Crusty bread + butter",cal:520,p:32,c:44,f:18},{m:"Hot Beef Sandwich",s:"Open-faced + mashed potatoes + gravy",cal:580,p:34,c:48,f:22},{m:"Chicken Noodle Soup",s:"Saltines + butter",cal:380,p:24,c:38,f:10},{m:"Grilled Cheese",s:"Tomato soup + pickles",cal:480,p:18,c:52,f:22},{m:"Sloppy Joe",s:"Toasted brioche bun + chips",cal:520,p:24,c:52,f:22},{m:"Pierogi Plate",s:"Caramelized onion + sour cream + kielbasa",cal:560,p:20,c:62,f:26}],
-    dinner:[{m:"Pot Roast",s:"Buttered egg noodles + carrots + gravy",cal:620,p:44,c:52,f:22},{m:"Meatloaf",s:"Mashed potatoes + green beans",cal:580,p:34,c:46,f:28},{m:"Pork Chops",s:"Applesauce + roasted sweet potatoes + rolls",cal:560,p:40,c:48,f:22},{m:"Beef Casserole",s:"Tater tot topping + cheddar",cal:580,p:28,c:52,f:28},{m:"Fried Pork Tenderloin",s:"Sandwich + white bread + mustard",cal:580,p:34,c:48,f:26},{m:"Chicken Pot Pie",s:"Flaky crust + mixed vegetables",cal:560,p:28,c:52,f:26},{m:"Bratwurst",s:"Sauerkraut + potato salad + mustard + bun",cal:580,p:26,c:44,f:32}],
-    snack:[{m:"Cheese Curds",s:"Deep fried + ranch",cal:280,p:12,c:18,f:18},{m:"Puppy Chow",s:"Chex + peanut butter + chocolate + powdered sugar",cal:280,p:6,c:38,f:14},{m:"Kettle Corn",s:"Sweet + salty",cal:180,p:2,c:34,f:6},{m:"Apple + Caramel Dip",s:"",cal:220,p:2,c:38,f:8}]
-  },
-  "mw-german":{
-    breakfast:[{m:"German Pancakes",s:"Lemon + powdered sugar + berry jam",cal:420,p:14,c:58,f:16},{m:"Rye Toast",s:"Butter + soft-boiled eggs",cal:360,p:16,c:38,f:16},{m:"Müsli Bowl",s:"Oats + apple + nuts + yogurt",cal:380,p:14,c:54,f:12},{m:"Bratwurst & Eggs",s:"Scrambled eggs + toast + mustard",cal:520,p:28,c:32,f:30},{m:"Pretzel Bun Sandwich",s:"Ham + Swiss + whole grain mustard + egg",cal:480,p:26,c:44,f:20},{m:"Käsespätzle",s:"Egg noodles + emmental + caramelized onion",cal:540,p:20,c:58,f:24},{m:"Fruit & Yogurt",s:"Quark + granola + honey",cal:340,p:14,c:48,f:8}],
-    lunch:[{m:"Bratwurst Plate",s:"Sauerkraut + potato salad + dark rye",cal:580,p:24,c:42,f:34},{m:"Reuben Sandwich",s:"Corned beef + Swiss + sauerkraut + Russian dressing",cal:620,p:30,c:52,f:30},{m:"Beer Cheese Soup",s:"Pretzel + chives",cal:520,p:18,c:40,f:32},{m:"Sauerbraten",s:"Red cabbage + potato dumplings",cal:580,p:40,c:52,f:22},{m:"Schnitzel Sandwich",s:"Pork schnitzel + lemon + arugula + pretzel roll",cal:580,p:34,c:52,f:24},{m:"Black Bean Soup",s:"Sour cream + cilantro + dark bread",cal:420,p:16,c:56,f:10},{m:"Potato Leek Soup",s:"Crusty bread + butter",cal:400,p:10,c:54,f:16}],
-    dinner:[{m:"Pork Schnitzel",s:"Lemon + spaetzle + red cabbage",cal:620,p:40,c:52,f:28},{m:"Sauerbraten",s:"Gingersnap gravy + dumplings + rotkohl",cal:620,p:44,c:58,f:24},{m:"Braised Short Ribs",s:"Dark beer + potato mash + carrots",cal:680,p:48,c:42,f:36},{m:"Jägerschnitzel",s:"Mushroom cream sauce + egg noodles",cal:620,p:38,c:52,f:30},{m:"Kassler Chops",s:"Smoked pork + mustard cream + sauerkraut + mash",cal:580,p:40,c:42,f:28},{m:"Königsberger Klopse",s:"Meatballs + white caper sauce + boiled potato",cal:540,p:34,c:42,f:26},{m:"Rotisserie Chicken",s:"Potato dumplings + red cabbage + gravy",cal:580,p:44,c:48,f:24}],
-    snack:[{m:"Soft Pretzel",s:"Beer cheese + mustard",cal:280,p:8,c:44,f:8},{m:"Leberwurst on Rye",s:"Gherkins + spicy mustard",cal:240,p:12,c:22,f:12},{m:"Radishes + Butter",s:"Sea salt + rye cracker",cal:120,p:2,c:10,f:8},{m:"Streuselkuchen",s:"German crumb cake",cal:280,p:4,c:42,f:12}]
-  },
-  "mw-modern":{
-    breakfast:[{m:"Classic American Breakfast",s:"2 eggs + bacon + hash browns + toast",cal:560,p:26,c:44,f:30},{m:"Cereal & Milk",s:"Cheerios or Wheaties + 2% milk + OJ",cal:320,p:10,c:54,f:6},{m:"Banana Pancakes",s:"Maple syrup + butter + crispy sausage",cal:500,p:14,c:72,f:18},{m:"Egg & Cheese Biscuit",s:"Buttery biscuit + sausage",cal:480,p:18,c:46,f:26},{m:"Toaster Waffle",s:"Peanut butter + banana + honey",cal:400,p:12,c:56,f:14},{m:"Scrambled Eggs & Toast",s:"OJ + coffee",cal:380,p:18,c:36,f:18},{m:"Yogurt & Granola",s:"Fresh fruit + honey",cal:340,p:14,c:52,f:8}],
-    lunch:[{m:"Cheeseburger",s:"Fries + ketchup + dill pickle",cal:680,p:34,c:58,f:32},{m:"Grilled Chicken Sandwich",s:"Lettuce + tomato + mayo + bun + chips",cal:520,p:36,c:48,f:18},{m:"BLT",s:"Sourdough + extra mayo + chips",cal:480,p:18,c:40,f:26},{m:"Mac & Cheese",s:"Breadcrumb topping + side salad",cal:560,p:20,c:68,f:22},{m:"Caesar Salad",s:"Grilled chicken + parmesan + croutons",cal:460,p:32,c:28,f:22},{m:"Turkey Sandwich",s:"Swiss + lettuce + honey mustard + chips",cal:480,p:28,c:42,f:18},{m:"Tomato Soup",s:"Grilled cheese + dill pickles",cal:460,p:18,c:50,f:20}],
-    dinner:[{m:"Meatloaf",s:"Ketchup glaze + mashed potatoes + corn",cal:580,p:34,c:48,f:24},{m:"Spaghetti & Meatballs",s:"Jarred marinara + garlic bread + Caesar",cal:620,p:32,c:68,f:22},{m:"Grilled Steak",s:"Baked potato + sour cream + green beans",cal:660,p:50,c:44,f:26},{m:"Roast Chicken",s:"Roasted potatoes + carrots + gravy",cal:580,p:44,c:38,f:24},{m:"Salmon",s:"Teriyaki glaze + steamed broccoli + rice",cal:520,p:40,c:44,f:18},{m:"BBQ Chicken",s:"Oven-baked + coleslaw + baked beans",cal:560,p:40,c:52,f:18},{m:"Pasta Bake",s:"Ground beef + tomato + mozzarella",cal:560,p:30,c:58,f:22}],
-    snack:[{m:"Chips & Salsa",s:"Tortilla chips + pico de gallo",cal:220,p:4,c:28,f:10},{m:"Oreos & Milk",s:"",cal:240,p:6,c:38,f:10},{m:"Peanut Butter & Crackers",s:"Ritz + creamy peanut butter",cal:280,p:8,c:28,f:16},{m:"String Cheese",s:"Apple slices",cal:180,p:10,c:18,f:6}]
-  },
-  "sw-texmex":{
-    breakfast:[{m:"Breakfast Tacos",s:"Scrambled egg + chorizo + cheese + salsa verde",cal:520,p:24,c:44,f:26},{m:"Huevos Rancheros",s:"Fried egg + black beans + ranchero sauce + tortilla",cal:540,p:22,c:52,f:24},{m:"Migas",s:"Crispy tortilla + egg + cheese + jalapeño",cal:500,p:20,c:44,f:26},{m:"Breakfast Burrito",s:"Egg + potato + sausage + salsa + cheddar",cal:580,p:26,c:56,f:28},{m:"Chilaquiles",s:"Green tomatillo sauce + crema + cotija + egg",cal:520,p:18,c:58,f:22},{m:"Avocado Toast Tex",s:"Queso fresco + pico + lime + serrano",cal:380,p:12,c:40,f:20},{m:"Breakfast Quesadilla",s:"Egg + bacon + pepper jack + salsa",cal:520,p:24,c:42,f:28}],
-    lunch:[{m:"Beef Fajitas",s:"Peppers + onions + flour tortillas + guac + pico",cal:620,p:38,c:52,f:28},{m:"Cheese Enchiladas",s:"Red chile sauce + sour cream + Mexican rice",cal:580,p:22,c:62,f:28},{m:"Tacos al Carbon",s:"Grilled beef + onion + cilantro + lime + street corn",cal:560,p:32,c:52,f:22},{m:"Green Chile Cheeseburger",s:"Hatch green chile + cheddar + fries",cal:660,p:36,c:56,f:34},{m:"Nachos",s:"Jalapeño + black beans + queso + guac + chicken",cal:680,p:30,c:62,f:36},{m:"Tamales",s:"Pork + red chile + Mexican rice + refried beans",cal:580,p:24,c:68,f:22},{m:"Queso Fundido",s:"Chorizo + mushroom + flour tortillas",cal:520,p:22,c:44,f:28}],
-    dinner:[{m:"Carne Asada",s:"Grilled beef + street corn + black beans + tortillas",cal:640,p:44,c:52,f:28},{m:"Mole Chicken",s:"Traditional mole sauce + rice + warm tortillas",cal:580,p:42,c:52,f:22},{m:"Birria Tacos",s:"Consommé + cilantro + onion + lime",cal:620,p:40,c:54,f:26},{m:"Chile Relleno",s:"Roasted poblano + cheese + red sauce + rice",cal:520,p:22,c:52,f:24},{m:"Texas Red Chili",s:"No beans + fritos + cheddar + sour cream",cal:580,p:34,c:38,f:32},{m:"Enchiladas Verdes",s:"Salsa verde + chicken + crema + Mexican rice",cal:560,p:32,c:58,f:22},{m:"Street Tacos Night",s:"Carnitas + barbacoa + al pastor + all the fixings",cal:600,p:36,c:58,f:26}],
-    snack:[{m:"Chips & Queso",s:"",cal:280,p:8,c:28,f:16},{m:"Guacamole",s:"Tortilla chips",cal:260,p:4,c:22,f:18},{m:"Elote",s:"Street corn + cotija + chili powder + lime",cal:220,p:6,c:30,f:10},{m:"Jalapeño Poppers",s:"Cream cheese + cheddar + bacon",cal:280,p:10,c:10,f:22}]
-  },
-  "sw-bbq":{
-    breakfast:[{m:"Biscuits & Gravy",s:"Sausage cream gravy + scrambled eggs",cal:580,p:18,c:56,f:32},{m:"Texas Toast French Toast",s:"Thick-cut + cinnamon + maple syrup",cal:520,p:14,c:72,f:20},{m:"Breakfast Sausage Tacos",s:"Egg + potato + cheese + salsa",cal:500,p:22,c:46,f:24},{m:"Kolaches",s:"Sausage + jalapeño + cheese pastry",cal:420,p:16,c:48,f:18},{m:"Overnight Oats",s:"Peach + honey + pecans",cal:360,p:12,c:56,f:10},{m:"Huevos con Chorizo",s:"Scrambled eggs + tortillas",cal:480,p:22,c:42,f:24},{m:"Peach Yogurt Bowl",s:"Texas peaches + granola + honey",cal:340,p:14,c:52,f:8}],
-    lunch:[{m:"Brisket Plate",s:"Pinto beans + jalapeño coleslaw + pickles + bread",cal:700,p:50,c:44,f:36},{m:"Beef Ribs",s:"Dill pickle + onion + white bread",cal:720,p:48,c:24,f:50},{m:"Sausage Plate",s:"Mustard + onion + saltines + potato salad",cal:560,p:26,c:36,f:36},{m:"Brisket Sandwich",s:"Pickles + onion + BBQ sauce + brioche",cal:620,p:42,c:52,f:26},{m:"Pulled Pork Plate",s:"Mac & cheese + coleslaw + bread",cal:660,p:38,c:54,f:30},{m:"Hot Link Plate",s:"Jalapeño cornbread + pinto beans",cal:580,p:24,c:48,f:30},{m:"Smoked Chicken Plate",s:"Potato salad + green beans + cornbread",cal:600,p:44,c:46,f:24}],
-    dinner:[{m:"Texas Brisket",s:"Peach jalapeño jam + grilled corn + pinto beans",cal:720,p:52,c:44,f:38},{m:"BBQ Ribs",s:"Baby back + honey glaze + twice-baked potato + slaw",cal:780,p:48,c:52,f:40},{m:"Smoked Chicken Wings",s:"Buffalo + ranch + celery + carrot",cal:580,p:42,c:18,f:38},{m:"Beef Clod",s:"Texas style shoulder clod + mesquite smoke + coleslaw",cal:640,p:52,c:24,f:40},{m:"Pork Ribs",s:"St. Louis cut + dry rub + baked beans + slaw",cal:720,p:44,c:44,f:44},{m:"Smoked Turkey Leg",s:"State fair style + corn + watermelon",cal:560,p:50,c:28,f:26},{m:"Texas Chili",s:"No beans + served over Fritos + cheddar",cal:560,p:34,c:36,f:30}],
-    snack:[{m:"Smoked Jalapeño Sausage",s:"Crackers + mustard",cal:260,p:12,c:6,f:22},{m:"Pork Rinds",s:"Hot sauce",cal:160,p:16,c:0,f:10},{m:"Peach Cobbler",s:"Vanilla ice cream",cal:360,p:4,c:52,f:16},{m:"Pickles & Cheese",s:"Sharp cheddar + dill pickle",cal:180,p:8,c:4,f:14}]
-  },
-  "sw-pueblo":{
-    breakfast:[{m:"Green Chile Egg Scramble",s:"Hatch green chile + cheese + flour tortilla",cal:460,p:22,c:36,f:26},{m:"Posole Breakfast Bowl",s:"Hominy + egg + chile broth + lime",cal:420,p:18,c:52,f:14},{m:"Blue Corn Pancakes",s:"Piñon butter + honey + fresh fruit",cal:440,p:10,c:64,f:16},{m:"Navajo Fry Bread",s:"Honey + butter",cal:480,p:8,c:72,f:18},{m:"Breakfast Burrito NM",s:"Green chile + potato + egg + cheese",cal:520,p:22,c:54,f:24},{m:"Calabacitas",s:"Zucchini + corn + cheese + egg",cal:380,p:16,c:38,f:18},{m:"Yogurt + Piñon",s:"Local honey + dried fruit",cal:320,p:12,c:48,f:10}],
-    lunch:[{m:"Green Chile Cheeseburger",s:"Hatch green chile + cheddar + green chile sauce + fries",cal:680,p:36,c:58,f:34},{m:"Posole",s:"Red or green chile + hominy + pork + garnish",cal:480,p:28,c:52,f:16},{m:"Blue Corn Enchiladas",s:"Red or green chile + beans + rice",cal:520,p:20,c:64,f:18},{m:"Carne Adovada",s:"Red chile pork + sopapilla + beans + rice",cal:580,p:38,c:56,f:22},{m:"Fry Bread Taco",s:"Navajo taco + beans + cheese + lettuce",cal:560,p:20,c:68,f:20},{m:"Chipotle Chicken Bowl",s:"Brown rice + black beans + pico + guac",cal:520,p:34,c:56,f:16},{m:"Red Chile Stew",s:"Beef + potato + hominy + cornbread",cal:480,p:30,c:52,f:16}],
-    dinner:[{m:"Carne Adovada",s:"Red chile marinated pork + posole + sopapilla",cal:600,p:42,c:52,f:24},{m:"Green Chile Stew",s:"Pork + potato + Hatch chile + tortilla",cal:520,p,c:48,f:18},{m:"Pueblo Feast Day Bread",s:"Roast mutton + green chile sauce",cal:560,p:38,c:48,f:22},{m:"Blue Corn Tamales",s:"Red chile + beans + Mexican rice",cal:540,p:22,c:72,f:18},{m:"Stuffed Sopapillas",s:"Ground beef + chile sauce + beans + rice",cal:560,p:28,c:62,f:22},{m:"Trout Tacos",s:"Green chile crema + purple cabbage slaw + avocado",cal:480,p:32,c:44,f:18},{m:"Chile Verde",s:"Slow-cooked pork + tomatillo + flour tortillas",cal:520,p:38,c:44,f:20}],
-    snack:[{m:"Bizcochito",s:"Anise + cinnamon + lard shortbread",cal:180,p:2,c:24,f:9},{m:"Piñon Nuts",s:"Roasted with sea salt",cal:200,p:4,c:6,f:18},{m:"Green Chile Hummus",s:"Pita chips",cal:220,p:6,c:24,f:12},{m:"Elote Cup",s:"Cotija + chili + lime + mayo",cal:220,p:6,c:28,f:10}]
-  },
-  "w-mountain":{
-    breakfast:[{m:"Elk Sausage & Eggs",s:"Scrambled + toast + coffee",cal:480,p:32,c:28,f:24},{m:"Skillet Hash",s:"Potato + peppers + onion + sunny-side egg",cal:440,p:18,c:44,f:22},{m:"Overnight Oats",s:"Huckleberry + local honey + walnuts",cal:360,p:12,c:58,f:10},{m:"Dutch Oven Biscuits",s:"Bacon + jam + butter",cal:500,p:16,c:52,f:26},{m:"Protein Smoothie",s:"Elk protein + banana + peanut butter + oat milk",cal:400,p:28,c:44,f:10},{m:"French Toast",s:"Thick sourdough + huckleberry syrup + cream",cal:480,p:14,c:68,f:18},{m:"Avocado & Smoked Salmon",s:"Multigrain toast + capers + dill",cal:400,p:24,c:32,f:20}],
-    lunch:[{m:"Elk Burger",s:"Caramelized onion + Swiss + green leaf + sweet potato fries",cal:620,p:42,c:52,f:24},{m:"Bison Chili",s:"Cheddar + sour cream + cornbread",cal:540,p:34,c:44,f:20},{m:"Smoked Trout Salad",s:"Mixed greens + roasted beets + goat cheese + hazelnuts",cal:440,p:28,c:22,f:28},{m:"Mountain Man Sandwich",s:"Roast beef + cheddar + avocado + chipotle + sourdough",cal:580,p:34,c:44,f:28},{m:"Campfire Stew",s:"Venison + root vegetables + biscuit",cal:520,p:36,c:44,f:18},{m:"Brautwurst & Sauerkraut",s:"Pretzel bun + sweet mustard",cal:540,p:22,c:42,f:30},{m:"Lentil Veggie Soup",s:"Crusty bread + kale + lemon",cal:400,p:18,c:58,f:8}],
-    dinner:[{m:"Grilled Elk Steak",s:"Huckleberry demi-glace + roasted potato + asparagus",cal:580,p:52,c:30,f:22},{m:"Campfire Trout",s:"Foil baked + lemon + herbs + roasted corn",cal:480,p:40,c:22,f:22},{m:"Bison Meatloaf",s:"Brown gravy + mashed potato + Brussels sprouts",cal:560,p:38,c:44,f:22},{m:"Dutch Oven Chicken",s:"Root vegetables + white wine + herbs",cal:540,p:44,c:30,f:22},{m:"Venison Stew",s:"Root vegetables + burgundy wine + biscuits",cal:560,p:40,c:44,f:18},{m:"Campfire Salmon",s:"Cedar plank + brown sugar + dill + roasted beets",cal:480,p:40,c:18,f:22},{m:"Rocky Mountain Oysters",s:"Buttermilk batter + cocktail sauce",cal:440,p:30,c:28,f:22}],
-    snack:[{m:"Trail Mix",s:"Almonds + dried huckleberry + dark chocolate + pecans",cal:280,p:8,c:28,f:18},{m:"Jerky",s:"Elk or bison jerky",cal:160,p:20,c:6,f:4},{m:"S'mores",s:"Graham + Hershey's + marshmallow",cal:280,p:4,c:46,f:10},{m:"Apple + Huckleberry Jam",s:"Sourdough toast",cal:200,p:4,c:38,f:4}]
-  },
-  "w-western":{
-    breakfast:[{m:"Ranch Eggs",s:"Over easy + skillet potatoes + sourdough + salsa",cal:480,p:22,c:44,f:24},{m:"Cowboy Steak & Eggs",s:"Rib eye + 2 eggs + toast",cal:680,p:52,c:28,f:40},{m:"Dutch Oven Pancakes",s:"Blueberry + butter + syrup",cal:480,p:12,c:68,f:18},{m:"Sausage & Cheese Grits",s:"Jalapeño + butter",cal:500,p:20,c:52,f:24},{m:"Whole Grain Toast",s:"Peanut butter + banana + honey",cal:380,p:14,c:52,f:14},{m:"Veggie Scramble",s:"Bell pepper + onion + mushroom + feta + toast",cal:400,p:20,c:32,f:20},{m:"Yogurt Parfait",s:"Granola + honey + fresh berries",cal:340,p:14,c:50,f:8}],
-    lunch:[{m:"Cowboy Burger",s:"Fried egg + cheddar + BBQ sauce + onion ring + fries",cal:720,p:40,c:58,f:36},{m:"Steak Sandwich",s:"Thinly sliced + chimichurri + ciabatta + arugula",cal:620,p:42,c:44,f:30},{m:"Ranch Salad",s:"Grilled chicken + avocado + bacon + ranch + croutons",cal:520,p:36,c:28,f:28},{m:"Cowboy Beans",s:"Smoked bacon + jalapeño + cornbread",cal:480,p:22,c:60,f:14},{m:"Dutch Oven Stew",s:"Beef + potato + carrot + biscuit",cal:560,p:36,c:46,f:20},{m:"Grilled Cheese",s:"Sourdough + aged cheddar + tomato soup",cal:460,p:18,c:50,f:22},{m:"Chicken Caesar Wrap",s:"Whole wheat wrap + romaine + parmesan",cal:480,p:34,c:40,f:18}],
-    dinner:[{m:"Cowboy Ribeye",s:"Cast iron seared + garlic butter + baked potato + slaw",cal:720,p:56,c:36,f:38},{m:"Dutch Oven Chicken",s:"Beer braised + root vegetables + cornbread",cal:560,p:44,c:40,f:22},{m:"Grilled Trout",s:"Lemon + herb butter + roasted corn + potato",cal:500,p:40,c:30,f:20},{m:"Cowboy Chili",s:"Beef + pinto + jalapeño + cornbread + cheddar",cal:580,p:36,c:48,f:22},{m:"Smoked Brisket",s:"Potato salad + pickles + beans + bread",cal:660,p:48,c:40,f:32},{m:"Pork Ribs",s:"Dry rub + slow cooked + slaw + beans",cal:700,p:44,c:40,f:42},{m:"BBQ Chicken",s:"Mesquite smoked + corn + cowboy beans",cal:560,p:42,c:44,f:20}],
-    snack:[{m:"Beef Jerky",s:"Peppered",cal:160,p:20,c:4,f:4},{m:"Campfire Popcorn",s:"Butter + salt",cal:180,p:4,c:28,f:8},{m:"Apple & Cheddar",s:"Sliced + aged cheddar",cal:200,p:8,c:24,f:10},{m:"Roasted Pumpkin Seeds",s:"Chili lime",cal:200,p:8,c:12,f:14}]
-  },
-  "p-cali":{
-    breakfast:[{m:"Avocado Toast",s:"Sourdough + poached egg + everything seasoning + microgreens",cal:380,p:16,c:36,f:22},{m:"Açaí Bowl",s:"Granola + banana + coconut + honey + peanut butter",cal:440,p:10,c:68,f:14},{m:"Green Smoothie",s:"Spinach + mango + banana + almond milk + chia",cal:340,p:10,c:58,f:8},{m:"Smoked Salmon Plate",s:"Everything bagel + cream cheese + capers + cucumber",cal:400,p:26,c:30,f:18},{m:"California Omelette",s:"Avocado + Monterey Jack + salsa + sour cream",cal:460,p:26,c:12,f:36},{m:"Overnight Oats",s:"Almond milk + berries + chia + hemp seeds",cal:350,p:12,c:54,f:10},{m:"Farmer's Market Scramble",s:"Seasonal veggies + goat cheese + sourdough",cal:420,p:22,c:32,f:22}],
-    lunch:[{m:"Fish Tacos",s:"Baja crispy cod + cabbage + crema + lime",cal:520,p:28,c:52,f:22},{m:"Cobb Salad",s:"Grilled chicken + avocado + egg + bacon + blue cheese",cal:540,p:38,c:14,f:38},{m:"Poke Bowl",s:"Ahi tuna + edamame + cucumber + sriracha mayo + brown rice",cal:520,p:32,c:58,f:14},{m:"Veggie Burrito",s:"Black beans + brown rice + guac + pico + salsa verde",cal:520,p:18,c:72,f:16},{m:"Grilled Chicken Salad",s:"Quinoa + arugula + lemon vinaigrette + shaved parmesan",cal:460,p:36,c:28,f:18},{m:"California Club",s:"Turkey + avocado + bacon + sprouts + whole wheat",cal:520,p:30,c:42,f:24},{m:"In-N-Out Style Burger",s:"Double double + animal style + lemonade",cal:680,p:36,c:42,f:40}],
-    dinner:[{m:"Pacific Salmon",s:"Miso glaze + bok choy + sesame rice",cal:520,p:42,c:42,f:18},{m:"California Pizza",s:"BBQ chicken + red onion + cilantro + smoked gouda",cal:580,p:30,c:58,f:22},{m:"Fish Tacos Night",s:"Grilled mahi + mango salsa + chipotle crema",cal:520,p:34,c:52,f:18},{m:"Quinoa Bowl",s:"Roasted veg + tahini + chickpeas + harissa",cal:480,p:18,c:64,f:18},{m:"Tri-Tip",s:"Santa Maria BBQ + salsa + pinquito beans + garlic bread",cal:600,p:44,c:40,f:28},{m:"Shrimp Tacos",s:"Pineapple pico + avocado crema + flour tortillas",cal:500,p:28,c:52,f:18},{m:"Veggie Stir-Fry",s:"Tofu + seasonal vegetables + teriyaki + brown rice",cal:440,p:20,c:60,f:14}],
-    snack:[{m:"Hummus & Veggies",s:"Carrots + cucumber + bell pepper",cal:180,p:8,c:22,f:8},{m:"Smoothie Bowl",s:"Mixed berries + coconut + granola",cal:280,p:8,c:44,f:8},{m:"Almond Butter Apple",s:"Gala apple + natural almond butter",cal:240,p:6,c:30,f:12},{m:"Guacamole",s:"Lime chips",cal:240,p:4,c:20,f:18}]
-  },
-  "p-pacific":{
-    breakfast:[{m:"Smoked Salmon Bagel",s:"Everything bagel + cream cheese + red onion + capers",cal:430,p:24,c:44,f:18},{m:"Pacific Salmon Hash",s:"Potato + dill + crème fraîche",cal:480,p:30,c:38,f:22},{m:"Sourdough Toast",s:"Local jam + cultured butter + soft-boiled egg",cal:380,p:14,c:44,f:16},{m:"Hazelnut Overnight Oats",s:"Local honey + hazelnuts + huckleberries",cal:360,p:12,c:56,f:10},{m:"PNW Veggie Scramble",s:"Chanterelle + kale + Tillamook cheddar + toast",cal:440,p:22,c:32,f:24},{m:"Cold Brew & Pastry",s:"Kouign-amann + cortado",cal:380,p:6,c:52,f:16},{m:"Grain Bowl",s:"Farro + roasted beet + poached egg + lemon tahini",cal:440,p:20,c:54,f:16}],
-    lunch:[{m:"Dungeness Crab Roll",s:"Butter-toasted bun + celery + Old Bay mayo + chips",cal:520,p:30,c:40,f:24},{m:"Salmon BLT",s:"Wild-caught salmon + aioli + sourdough",cal:540,p:36,c:38,f:24},{m:"Clam Chowder",s:"Sourdough bread bowl + oyster crackers",cal:540,p:18,c:52,f:26},{m:"PNW Grain Bowl",s:"Farro + roasted root veg + smoked trout + tahini",cal:480,p:28,c:52,f:18},{m:"Wild Mushroom Soup",s:"Chanterelle + porcini + cream + sourdough",cal:420,p:10,c:40,f:22},{m:"Halibut Fish & Chips",s:"House-made tartar + mushy peas + malt vinegar",cal:580,p:34,c:52,f:26},{m:"Geoduck Ceviche",s:"Lime + jalapeño + cucumber + chips",cal:360,p:24,c:28,f:10}],
-    dinner:[{m:"Cedar-Plank Salmon",s:"Brown sugar dill glaze + roasted asparagus + wild rice",cal:520,p:42,c:38,f:20},{m:"Dungeness Crab",s:"Drawn butter + garlic bread + corn + coleslaw",cal:560,p:40,c:32,f:26},{m:"Pacific Halibut",s:"Lemon caper butter + baby potatoes + chard",cal:500,p:42,c:28,f:22},{m:"Clam Linguine",s:"White wine + garlic + olive oil + herbs",cal:520,p:26,c:58,f:16},{m:"Steamer Clams",s:"White wine + garlic + sourdough + butter",cal:420,p:28,c:28,f:16},{m:"Grilled Oysters",s:"Garlic butter + parmesan + sourdough",cal:440,p:22,c:28,f:22},{m:"Wild Mushroom Risotto",s:"Parmesan + truffle oil + arugula",cal:520,p:14,c:70,f:18}],
-    snack:[{m:"Smoked Salmon Crackers",s:"Cream cheese + dill",cal:200,p:14,c:14,f:10},{m:"Geoduck Chips",s:"Sea salt",cal:160,p:8,c:18,f:6},{m:"Hazelnut Dark Chocolate",s:"72% cacao Theo bar",cal:220,p:4,c:20,f:14},{m:"Pickled Veggies",s:"Housemade + hummus",cal:120,p:4,c:16,f:4}]
-  },
-  "p-hawaiian":{
-    breakfast:[{m:"Loco Moco",s:"Rice + burger patty + fried egg + brown gravy",cal:620,p:32,c:62,f:28},{m:"Spam Musubi",s:"Nori + rice + Spam + furikake",cal:380,p:14,c:56,f:10},{m:"Açaí Bowl Hawaiian",s:"Granola + mango + coconut + honey + lilikoi",cal:420,p:10,c:66,f:12},{m:"Poi & Eggs",s:"Taro poi + scrambled egg + Kona coffee",cal:380,p:16,c:52,f:10},{m:"Malasadas",s:"Portuguese donut + custard filling + sugar",cal:380,p:8,c:56,f:14},{m:"Hawaiian Pancakes",s:"Macadamia + coconut syrup + pineapple",cal:500,p:10,c:72,f:18},{m:"Fruit Bowl",s:"Local papaya + mango + pineapple + li hing powder",cal:220,p:4,c:52,f:2}],
-    lunch:[{m:"Poke Bowl",s:"Ahi + edamame + cucumber + furikake + sriracha mayo + sushi rice",cal:540,p:36,c:58,f:14},{m:"Plate Lunch",s:"Two scoop rice + macaroni salad + teriyaki chicken",cal:720,p:34,c:82,f:22},{m:"Kalua Pork Slider",s:"Brioche bun + pickled onion + house slaw",cal:540,p:30,c:50,f:22},{m:"Saimin",s:"Noodle soup + char siu + fishcake + green onion",cal:480,p:22,c:62,f:12},{m:"Garlic Shrimp Plate",s:"North Shore style + 2 scoop rice + salad",cal:580,p:34,c:56,f:20},{m:"Lau Lau",s:"Pork in taro leaf + rice + lomi salmon",cal:520,p:36,c:44,f:20},{m:"Shave Ice",s:"Lilikoi + strawberry + coconut + ice cream bottom",cal:280,p:4,c:58,f:6}],
-    dinner:[{m:"Kalua Pork",s:"Slow-roasted + laulau + poi + lomi lomi salmon",cal:580,p:44,c:38,f:24},{m:"Huli Huli Chicken",s:"Pineapple ginger glaze + rice + macaroni salad",cal:560,p:38,c:54,f:18},{m:"Garlic Ahi",s:"Pan-seared + miso butter + stir-fried veg + rice",cal:520,p:40,c:42,f:18},{m:"Furikake Salmon",s:"Soy glaze + bok choy + sesame rice",cal:500,p:40,c:38,f:18},{m:"Shoyu Chicken",s:"Soy + ginger + garlic braise + steamed rice + salad",cal:520,p:38,c:48,f:16},{m:"Oxtail Soup",s:"Ginger + star anise + peanuts + rice + green onion",cal:560,p:38,c:40,f:22},{m:"Shrimp Stir-Fry",s:"Pineapple + bell pepper + macadamia fried rice",cal:520,p:28,c:58,f:18}],
-    snack:[{m:"Manapua",s:"Steamed char siu bun",cal:280,p:10,c:42,f:8},{m:"Haupia",s:"Coconut pudding",cal:200,p:2,c:28,f:10},{m:"Macadamia Nuts",s:"Honey roasted",cal:220,p:4,c:10,f:20},{m:"Pineapple Slices",s:"Li hing powder",cal:120,p:2,c:30,f:0}]
-  }
-};
+// Seasonal Produce Spotlight
+const month = new Date().getMonth();
+const seasonal = [
+"Winter: Sweet Potatoes, Kale, Oranges",
+"Winter: Carrots, Broccoli, Grapefruit",
+"Spring: Asparagus, Strawberries, Spinach",
+"Spring: Peas, Radishes, Lettuce",
+"Summer: Corn, Tomatoes, Watermelon",
+"Summer: Zucchini, Blueberries, Peaches",
+"Summer: Bell Peppers, Cucumbers, Cherries",
+"Summer: Eggplant, Plums, Green Beans",
+"Fall: Apples, Pumpkins, Brussels Sprouts",
+"Fall: Pears, Cauliflower, Sweet Corn",
+"Fall: Cranberries, Squash, Turnips",
+"Winter: Potatoes, Cabbage, Pomegranates"
+];
 
-// Fix a couple of typos in meal data (missing values become 0)
-Object.values(MEALS).forEach(style=>{
-  Object.values(style).forEach(arr=>arr.forEach(m=>{
-    if(typeof m.p!=='number')m.p=20;
-    if(typeof m.c!=='number')m.c=40;
-    if(typeof m.f!=='number')m.f=15;
-    if(typeof m.cal!=='number')m.cal=m.p*4+m.c*4+m.f*9;
-  }));
-});
+document.getElementById("seasonal-produce").innerText = seasonal[month];
 
-// GROCERY DATA
-const GROCERY={
-  "ne-classic":{"Proteins":["Cod fillets","Clams","Lobster tails","Boneless chicken breast","Corned beef brisket","Large eggs (dozen)"],"Produce":["Russet potatoes","Yukon Gold potatoes","Carrots","Celery","Onions","Garlic","Apples","Blueberries","Corn on the cob"],"Dairy":["Butter (salted)","Heavy cream","Cheddar cheese","Cream cheese","Sour cream"],"Pantry":["Clam juice","Oyster crackers","Panko breadcrumbs","Maple syrup","New England clam chowder mix"],"Bread":["Split-top hot dog buns","Sourdough boule","Sandwich bread"]},
-  "ne-italian":{"Proteins":["Ground beef (80/20)","Italian sausage","Chicken breasts","Shrimp (21/25)","Bacon"],"Produce":["Roma tomatoes","Basil (fresh)","Garlic","Onions","Bell peppers","Lemons","Baby arugula","Zucchini"],"Dairy":["Mozzarella (fresh + shredded)","Ricotta","Parmesan (block)","Eggs","Butter"],"Pantry":["San Marzano crushed tomatoes","Pasta (spaghetti + penne)","Olive oil (EVOO)","Red wine","Tomato paste","Italian seasoning"],"Bread":["Italian hero rolls","Sourdough baguette","Garlic bread"]},
-  "ne-modern":{"Proteins":["Salmon fillets","Chickpeas (canned)","Chicken breast","Eggs","Tofu (firm)"],"Produce":["Avocados","Kale","Spinach","Cherry tomatoes","Beets","Cucumber","Lemons","Blueberries","Arugula"],"Dairy":["Greek yogurt (plain)","Goat cheese","Parmesan"],"Pantry":["Quinoa","Farro","Tahini","Olive oil","Chia seeds","Almond butter"],"Bread":["Sourdough loaf","Whole wheat pita"]},
-  "s-bbq":{"Proteins":["Beef brisket (whole packer)","Pork spare ribs","Chicken quarters","Ground beef","Andouille sausage","Eggs"],"Produce":["Jalapeños","Cabbage (green)","Corn","Red onion","Lime","Cilantro","Garlic","Dill pickles"],"Dairy":["Cheddar (sharp)","Sour cream","Butter"],"Pantry":["Pinto beans","BBQ sauce","Dry rub (paprika, cumin, garlic, black pepper)","Saltines","Apple cider vinegar","Yellow mustard"],"Bread":["Jalapeño cornbread mix","White bread (loaf)","Brioche buns"]},
-  "s-comfort":{"Proteins":["Whole chicken","Pork shoulder","Shrimp","Catfish fillets","Eggs","Bacon"],"Produce":["Sweet potatoes","Collard greens","Okra","Peaches","Green beans","Corn","Onions","Garlic"],"Dairy":["Buttermilk","Cheddar","Heavy cream","Butter","Sour cream"],"Pantry":["All-purpose flour","Cornmeal","Hot sauce","Stone-ground grits","Honey"],"Bread":["Biscuit mix","Cornbread mix"]},
-  "s-cajun":{"Proteins":["Gulf shrimp (large)","Crawfish tails","Andouille sausage","Whole chicken","Catfish"],"Produce":["Yellow onion","Celery","Bell pepper (green)","Garlic","Okra","Green onions","Lemon"],"Dairy":["Butter (unsalted)","Heavy cream","Eggs"],"Pantry":["Cajun seasoning (Tony's)","File powder","Long-grain white rice","Chicken stock","Roux (or flour + oil)","Hot sauce (Louisiana)","Bay leaves"],"Bread":["French bread baguette","Hoagie rolls"]},
-  "mw-comfort":{"Proteins":["Chuck roast","Ground beef","Chicken thighs","Pork chops","Kielbasa","Eggs"],"Produce":["Yukon Gold potatoes","Carrots","Celery","Onions","Corn","Green beans","Cabbage"],"Dairy":["Cheddar (block)","Sour cream","Butter","Cream of mushroom soup"],"Pantry":["Egg noodles","Cream of chicken soup","Beef stock","Chili powder","All-purpose flour","Tater tots"],"Bread":["White sandwich bread","Dinner rolls","Cornbread mix"]},
-  "mw-german":{"Proteins":["Bratwurst","Pork chops","Ground pork","Corned beef","Eggs"],"Produce":["Red cabbage","Sauerkraut","Russet potatoes","Onions","Apples","Garlic","Dill pickles"],"Dairy":["Swiss cheese","Emmental","Sour cream","Heavy cream","Butter"],"Pantry":["Dark rye bread","Spicy brown mustard","Beer (dark lager)","Caraway seeds","Beef stock","Apple cider vinegar"],"Bread":["Pretzel rolls","Dark rye loaf"]},
-  "mw-modern":{"Proteins":["Ground beef (80/20)","Chicken breasts","Salmon","Bacon","Eggs"],"Produce":["Russet potatoes","Tomatoes","Lettuce","Onions","Garlic","Broccoli","Green beans"],"Dairy":["American cheese","Cheddar","Butter","Milk","Sour cream"],"Pantry":["Ketchup","Yellow mustard","Pasta","Jarred marinara","Beef stock","Worcestershire"],"Bread":["Burger buns","Sandwich bread","English muffins"]},
-  "sw-texmex":{"Proteins":["Beef skirt steak","Ground beef","Chicken thighs","Chorizo","Eggs","Shrimp"],"Produce":["Jalapeños","Hatch green chile","Avocados","Limes","Cilantro","Roma tomatoes","White onion","Garlic","Serrano peppers"],"Dairy":["Cotija cheese","Queso fresco","Cheddar (shredded)","Sour cream","Butter"],"Pantry":["Corn tortillas","Flour tortillas","Cumin","Chili powder","Black beans","Refried beans","Salsa verde","Red enchilada sauce"],"Bread":["Bolillo rolls","Corn tortillas (fresh)"]},
-  "sw-bbq":{"Proteins":["Whole beef brisket","Pork ribs (spare)","Ground beef","Smoked sausage","Eggs"],"Produce":["Jalapeños","White onion","Garlic","Dill pickles","Limes","Cilantro"],"Dairy":["Cheddar (sharp)","Butter","Sour cream"],"Pantry":["Dry rub mix","BBQ sauce","Pinto beans","Saltines","Post oak wood chunks","Peach preserves"],"Bread":["White bread (loaf)","Jalapeño cornbread mix","Brioche buns"]},
-  "sw-pueblo":{"Proteins":["Pork shoulder","Ground beef","Trout fillets","Eggs","Dried beans (pinto + black)"],"Produce":["Hatch green chiles","Dried red chiles","Hominy (canned)","Garlic","White onion","Zucchini","Tomatillos","Lime"],"Dairy":["Cotija cheese","Sour cream","Queso fresco","Butter"],"Pantry":["Masa harina","Blue cornmeal","Dried posole","Chicken stock","Lard","Cumin","Oregano"],"Bread":["Flour tortillas","Blue corn tortillas"]},
-  "w-mountain":{"Proteins":["Elk steaks","Bison ground","Trout fillets","Salmon","Venison","Eggs"],"Produce":["Yukon Gold potatoes","Asparagus","Wild mushrooms","Beets","Carrots","Onions","Kale"],"Dairy":["Sharp cheddar","Butter","Sour cream","Heavy cream"],"Pantry":["Chicken stock","Red wine","Dried huckleberries","Pine nuts","Sourdough mix","Jerky seasonings"],"Bread":["Sourdough loaf","Biscuit mix"]},
-  "w-western":{"Proteins":["Ribeye steaks","Whole chicken","Pork ribs","Trout","Eggs","Bacon"],"Produce":["Russet potatoes","Corn","Green beans","Onions","Garlic","Cabbage"],"Dairy":["Cheddar (aged)","Butter","Sour cream"],"Pantry":["Beef stock","Dry BBQ rub","Beans (pinto)","Mesquite chips","Worcestershire sauce"],"Bread":["Sourdough loaf","Cornbread mix","Dinner rolls"]},
-  "p-cali":{"Proteins":["Salmon fillets","Ahi tuna","Chicken breast","Eggs","Chickpeas","Tofu"],"Produce":["Avocados","Lemons","Kale","Arugula","Cherry tomatoes","Cucumber","Beets","Microgreens","Berries (mixed)"],"Dairy":["Greek yogurt","Goat cheese","Parmesan (block)","Cream cheese"],"Pantry":["Quinoa","Tahini","Olive oil (EVOO)","Sriracha","Sesame oil","Chia seeds","Granola"],"Bread":["Sourdough loaf","Whole grain tortillas","Whole wheat bread"]},
-  "p-pacific":{"Proteins":["Wild salmon","Dungeness crab (whole)","Clams","Halibut","Pacific shrimp","Eggs"],"Produce":["Chanterelle mushrooms","Asparagus","Baby potatoes","Beets","Garlic","Lemons","Kale","Dill (fresh)"],"Dairy":["Butter (cultured)","Heavy cream","Tillamook cheddar","Cream cheese"],"Pantry":["Sourdough starter","White wine","Olive oil","Capers","Fish stock","Pasta (linguine)"],"Bread":["Sourdough loaf","Whole grain crackers"]},
-  "p-hawaiian":{"Proteins":["Ahi tuna (sashimi grade)","Spam","Chicken thighs","Kalua pork","Garlic shrimp","Eggs"],"Produce":["Edamame","Avocado","Mango","Pineapple","Green onion","Ginger","Garlic","Bok choy","Cucumber"],"Dairy":["Butter","Cream (for haupia)"],"Pantry":["Sushi rice","Furikake","Soy sauce","Oyster sauce","Coconut milk","Li hing powder","Sesame oil","Taro (frozen poi)"],"Bread":["Hawaiian rolls","Nori sheets","Steamed bun wrappers"]}
-};
+// Holiday Detection
+const today = new Date();
+let holidayText = "No major holiday this week. Enjoy family meals together!";
 
-// SHOPPING TIPS by style
-const SHOP_TIPS={
-  "ne-classic":"Buy seafood on Friday for the freshest weekend clam chowder and lobster. Whole Foods and Market Basket have excellent New England fish counters.",
-  "ne-italian":"Buy San Marzano crushed tomatoes in bulk (6-packs at Costco) — they're the foundation of every sauce. Make Sunday gravy for the week.",
-  "ne-modern":"Shop the farmers market Saturday for weekly produce. Trader Joe's has great quinoa, tahini, and frozen grain mixes at budget prices.",
-  "s-bbq":"Buy your brisket whole from Restaurant Depot or Costco — better price per pound. Ask the butcher for USDA Choice or Prime. Smoke Saturday, eat all week.",
-  "s-comfort":"Costco chicken in bulk is ideal for fried chicken + leftovers. Buy fresh okra and field peas from Southern farmers markets when in season.",
-  "s-cajun":"Tony Chachere's Creole seasoning is the MVP of any Cajun pantry. Buy andouille from a local butcher for authentic flavor — it makes a real difference.",
-  "mw-comfort":"Sam's Club or Costco for bulk ground beef and cream of mushroom soup. Freeze half and thaw weekly. Great for chili, casseroles, and meatloaf.",
-  "mw-german":"German butcher shops often carry authentic bratwurst and kielbasa. Aldi stores carry excellent imported German products at great prices.",
-  "mw-modern":"Aldi and Walmart Neighborhood Market are the best value grocery options in the Midwest. Buy store-brand when possible — quality is often equal.",
-  "sw-texmex":"HEB in Texas is the best grocery store for Tex-Mex supplies. Stock up on tortillas, dried chiles, and queso. Make your own salsa verde — it's easy and cheap.",
-  "sw-bbq":"Order a whole packer brisket (12–16 lbs) from a local butcher. Post oak wood is traditional for Central Texas BBQ. Rest brisket at least 1 hour before slicing.",
-  "sw-pueblo":"Find dried Hatch green chiles online or at the New Mexico Chile Association for authentic flavor. Roast and freeze a big batch in fall for the whole year.",
-  "w-mountain":"Check local hunting co-ops for elk and venison. Whole Foods Rocky Mountain locations often carry bison. Wild mushroom season is September–October.",
-  "w-western":"Costco has excellent ribeye and brisket. Buy in bulk and freeze. A cast iron skillet is the single most important piece of western cooking equipment.",
-  "p-cali":"Shop at local farmers markets for the best produce deals. Trader Joe's has great frozen wild salmon, avocados, and quinoa at excellent prices year-round.",
-  "p-pacific":"Pike Place Market in Seattle and Portland's seafood counters have the freshest wild-caught Pacific fish. Buy whole salmon for better value per pound.",
-  "p-hawaiian":"Costco Hawaii locations stock plate lunch essentials. Visit Asian grocery stores (Don Quijote) for furikake, poi, and authentic Hawaiian ingredients."
-};
-
-// US HOLIDAYS
-const US_HOLIDAYS={
-  "Jan 1":"🎆 New Year's Day",
-  "Jan 20":"🫡 MLK Day",
-  "Feb 14":"❤️ Valentine's Day",
-  "Feb 17":"🏛️ Presidents' Day",
-  "Mar 17":"🍀 St. Patrick's Day",
-  "May 26":"🪖 Memorial Day",
-  "Jun 19":"✊ Juneteenth",
-  "Jul 4":"🎆 Independence Day",
-  "Sep 1":"⚒️ Labor Day",
-  "Oct 31":"🎃 Halloween",
-  "Nov 11":"🎖️ Veterans Day",
-  "Nov 27":"🦃 Thanksgiving",
-  "Dec 25":"🎄 Christmas",
-  "Feb 2":"🏈 Super Bowl Sunday"
-};
-
-// HOLIDAY MEALS
-const HOLIDAY_MEALS={
-  "🦃 Thanksgiving":{m:"Roast Turkey",s:"Stuffing + cranberry sauce + mashed potatoes + green bean casserole + rolls"},
-  "🎄 Christmas":{m:"Prime Rib Roast",s:"Yorkshire pudding + au jus + roasted vegetables + mashed potatoes"},
-  "🎆 Independence Day":{m:"BBQ Cookout",s:"Burgers + hot dogs + potato salad + watermelon + corn on the cob"},
-  "🎆 New Year's Day":{m:"Black-Eyed Peas",s:"Collard greens + cornbread + pot roast for luck"},
-  "🏈 Super Bowl Sunday":{m:"Super Bowl Spread",s:"Wings + nachos + chili + sliders + jalapeño poppers"},
-  "❤️ Valentine's Day":{m:"Surf & Turf",s:"Filet mignon + lobster tail + asparagus + chocolate mousse"},
-  "🍀 St. Patrick's Day":{m:"Corned Beef & Cabbage",s:"Boiled potatoes + Irish soda bread + Guinness gravy"},
-  "🪖 Memorial Day":{m:"Memorial Day Cookout",s:"BBQ ribs + pasta salad + deviled eggs + apple pie"},
-  "🎃 Halloween":{m:"Pumpkin Chili",s:"Cornbread + candy corn cookies + caramel apples"},
-};
-
-// RECIPES
-const RECIPES={
-  "Blueberry Pancakes":{ing:[{a:"2 cups",n:"All-purpose flour"},{a:"2 tbsp",n:"Sugar"},{a:"1 tbsp",n:"Baking powder"},{a:"½ tsp",n:"Salt"},{a:"2",n:"Large eggs"},{a:"1¾ cups",n:"Buttermilk"},{a:"¼ cup",n:"Melted butter"},{a:"1 cup",n:"Fresh blueberries"}],steps:["Whisk dry ingredients: flour, sugar, baking powder, salt in a large bowl.","Beat eggs, buttermilk, and melted butter together. Pour into dry ingredients and stir until just combined — lumps are fine, don't overwork.","Fold blueberries gently into batter. Overmixing makes them break and streak purple.","Heat a griddle or non-stick pan over medium heat. Lightly butter it.","Pour ¼ cup batter per pancake. Flip when bubbles appear on surface and edges look set (about 2 min). Cook 1–2 min more."],tip:"Don't press the pancakes with the spatula — it deflates them. Patience = fluffy."},
-  "Biscuits & Gravy":{ing:[{a:"2 cups",n:"Self-rising flour"},{a:"⅓ cup",n:"Cold butter (cubed)"},{a:"¾ cup",n:"Buttermilk"},{a:"1 lb",n:"Breakfast sausage"},{a:"¼ cup",n:"All-purpose flour"},{a:"2 cups",n:"Whole milk"},{a:"Salt, pepper",n:"to taste"}],steps:["Preheat oven 450°F. Mix flour and butter with fingers until pea-sized crumbles. Add buttermilk and stir until just combined.","Dump dough on floured surface, fold 3-4 times. Pat 1 inch thick and cut with a biscuit cutter.","Bake 12-14 minutes until golden. While baking, brown sausage in a skillet over medium heat.","Don't drain fat. Sprinkle flour over sausage and stir 2 minutes. Slowly pour in milk while stirring.","Simmer, stirring constantly, until thick (3-4 min). Season with salt and lots of black pepper. Pour over split biscuits."],tip:"The secret to fluffy biscuits: cold butter, cold buttermilk, and minimum mixing."},
-  "New England Clam Chowder":{ing:[{a:"4 slices",n:"Thick bacon (diced)"},{a:"1",n:"Onion (diced)"},{a:"3",n:"Celery stalks (diced)"},{a:"3",n:"Russet potatoes (cubed)"},{a:"3 cans",n:"Chopped clams (6.5 oz each)"},{a:"2 cups",n:"Heavy cream"},{a:"1 cup",n:"Whole milk"},{a:"3 tbsp",n:"Butter"},{a:"3 tbsp",n:"All-purpose flour"},{a:"Salt, pepper",n:"to taste"}],steps:["Cook bacon in a large pot until crispy. Remove bacon, leave drippings.","Sauté onion and celery in drippings 5 min until soft. Add butter and flour, stir 2 min.","Drain clams, add clam juice + enough water to cover potatoes. Add potatoes, simmer 12 min until just tender.","Add clams, cream, milk. Simmer on very low heat 10 minutes — do not boil or it will curdle.","Season generously. Top with crispy bacon, oyster crackers, and a pat of butter."],tip:"Never boil clam chowder once cream is added — low and slow keeps it velvety."},
-  "BBQ Brisket":{ing:[{a:"12-14 lb",n:"Whole packer brisket (USDA Choice)"},{a:"¼ cup",n:"Kosher salt"},{a:"¼ cup",n:"Coarse black pepper"},{a:"1 tbsp",n:"Garlic powder"},{a:"Post oak wood",n:"for smoking"}],steps:["Trim brisket to ¼-inch fat cap. Mix salt, pepper, garlic powder. Coat all sides liberally.","Rest on a wire rack uncovered in fridge overnight (or at least 4 hours) to form a pelicle.","Preheat smoker to 250°F with post oak wood. Place brisket fat-side up on grate.","Smoke 8-12 hours until internal temp hits 165°F. Wrap tightly in butcher paper.","Continue smoking to 200-203°F internal. Rest 1-2 hours in a cooler before slicing against the grain."],tip:"The stall (160-170°F) is normal — don't panic or raise the temperature. Just wait it out."},
-  "Chicken & Waffles":{ing:[{a:"4",n:"Chicken thighs + drums"},{a:"2 cups",n:"Buttermilk"},{a:"2 cups",n:"All-purpose flour"},{a:"1 tsp each",n:"Paprika, garlic powder, onion powder, cayenne"},{a:"Salt, pepper",n:"to taste"},{a:"Oil",n:"for frying"},{a:"2 cups",n:"Waffle batter (boxed or homemade)"},{a:"Maple syrup + hot sauce",n:"for serving"}],steps:["Marinate chicken in buttermilk with salt and hot sauce overnight in fridge.","Mix flour with all spices. Remove chicken from buttermilk letting excess drip off.","Dredge in seasoned flour, pressing well. Let sit 10 min so coating adheres.","Heat 3 inches of oil to 325°F. Fry chicken 12-15 min until cooked through and golden. Rest on rack.","Make waffles. Serve immediately with chicken on top, drizzled with maple syrup and a few dashes of hot sauce."],tip:"Low and slow frying (325°F vs 375°F) gives you a crunchier coating that stays crisp longer."},
-  "Carne Asada":{ing:[{a:"2 lbs",n:"Beef skirt or flank steak"},{a:"½ cup",n:"Orange juice"},{a:"¼ cup",n:"Lime juice (3-4 limes)"},{a:"4 cloves",n:"Garlic (minced)"},{a:"1 tsp",n:"Cumin"},{a:"1 tsp",n:"Chili powder"},{a:"¼ cup",n:"Cilantro (chopped)"},{a:"2 tbsp",n:"Soy sauce"},{a:"2 tbsp",n:"Olive oil"}],steps:["Combine all marinade ingredients. Score the meat with a knife if thicker than ½ inch.","Marinate steak in a zip-lock bag 2-8 hours (longer = more flavor). Don't go over 24 hrs or citrus will affect texture.","Grill or cast iron on VERY high heat. You want a hard sear with char.","Cook 3-4 min per side for medium-rare. Rest 5-10 minutes — do not skip this.","Slice ACROSS the grain into thin strips at a 45-degree angle. Serve in warm tortillas with guac and pico."],tip:"The against-the-grain slice is everything — it's the difference between tender and chewy."},
-  "Beef Brisket Tacos":{ing:[{a:"2 lbs",n:"Leftover smoked brisket (sliced)"},{a:"12",n:"Corn tortillas"},{a:"½ cup",n:"Pickled jalapeños"},{a:"½ cup",n:"White onion (diced)"},{a:"½ cup",n:"Cilantro (chopped)"},{a:"2",n:"Limes"},{a:"½ cup",n:"Queso fresco (crumbled)"},{a:"½ cup",n:"Salsa verde"}],steps:["Warm brisket in a dry skillet or in the oven at 300°F wrapped in foil for 15 min.","Warm tortillas directly on a gas burner or in a dry cast iron until charred in spots.","Layer tortillas with brisket slices, pickled jalapeños, diced onion, and cilantro.","Add crumbled queso fresco and a spoonful of salsa verde.","Squeeze fresh lime over everything. Serve immediately."],tip:"Charring the tortilla directly over the flame takes 10 seconds and makes a massive difference."},
-  "Pot Roast":{ing:[{a:"3-4 lb",n:"Chuck roast"},{a:"3",n:"Carrots (chunked)"},{a:"3",n:"Celery stalks (chunked)"},{a:"1",n:"Onion (quartered)"},{a:"4",n:"Garlic cloves"},{a:"2 cups",n:"Beef stock"},{a:"1 cup",n:"Red wine (optional)"},{a:"2 tbsp",n:"Tomato paste"},{a:"2 tbsp",n:"Oil"},{a:"Salt, pepper, thyme, rosemary",n:""}],steps:["Pat chuck roast dry. Season aggressively with salt and pepper.","Sear in a Dutch oven with hot oil until deeply brown on all sides (4-5 min per side). Don't rush this step.","Remove meat. Sauté onion and garlic. Add tomato paste, cook 2 min. Add wine, scrape up browned bits.","Add stock, thyme, rosemary. Nestle roast back in. Liquid should come halfway up.","Braise covered in a 325°F oven for 3-4 hours until fork-tender. Add vegetables last 45 min."],tip:"Collagen-rich chuck roast gets better the longer it braises — 4 hours beats 3 hours every time."},
-  "Cedar Plank Salmon":{ing:[{a:"2 lbs",n:"Wild Pacific salmon fillet (skin-on)"},{a:"2 tbsp",n:"Brown sugar"},{a:"1 tbsp",n:"Soy sauce"},{a:"1 tsp",n:"Dijon mustard"},{a:"2 tbsp",n:"Fresh dill (chopped)"},{a:"1",n:"Lemon (sliced)"},{a:"Cedar plank",n:"soaked 1 hour in water"}],steps:["Soak cedar plank in water at least 1 hour (or up to 12 hours). Prevents it from catching fire.","Mix brown sugar, soy sauce, and Dijon. Spread over salmon flesh.","Top with fresh dill and lemon slices.","Preheat grill to medium (375°F). Place plank on grill for 5 min until it starts to smoke.","Place salmon on plank. Close lid. Cook 15-20 min until salmon flakes easily. Internal temp 145°F."],tip:"When the plank starts smoking before you add salmon — that's when the flavor magic starts."},
-  "Fish Tacos":{ing:[{a:"1.5 lbs",n:"Cod or mahi-mahi fillet"},{a:"1 cup",n:"Panko breadcrumbs"},{a:"½ cup",n:"Flour"},{a:"2",n:"Eggs (beaten)"},{a:"1 tsp",n:"Cumin"},{a:"1 tsp",n:"Garlic powder"},{a:"8",n:"Corn tortillas"},{a:"2 cups",n:"Shredded cabbage"},{a:"½ cup",n:"Sour cream"},{a:"2 tbsp",n:"Sriracha"},{a:"Lime",n:"+ cilantro for serving"}],steps:["Set up breading stations: flour, egg wash, seasoned panko. Season flour with cumin, garlic, salt.","Slice fish into strips. Coat in flour, then egg, then panko. Press firmly.","Fry in oil at 375°F (or bake at 425°F) until golden and cooked through, about 3-4 min per side.","Mix sour cream with sriracha for the crema.","Warm tortillas. Layer: fish strip + cabbage + drizzle of crema + cilantro + big squeeze of lime."],tip:"Let the breaded fish rest on a rack 5 min before frying — the coating adheres better and you get less oil splatter."},
-  "Poke Bowl":{ing:[{a:"1 lb",n:"Sashimi-grade ahi tuna (diced)"},{a:"3 tbsp",n:"Soy sauce"},{a:"1 tbsp",n:"Sesame oil"},{a:"1 tsp",n:"Sriracha"},{a:"2 cups",n:"Sushi rice (cooked + seasoned)"},{a:"1 cup",n:"Edamame (shelled)"},{a:"1",n:"Cucumber (sliced)"},{a:"1",n:"Avocado (sliced)"},{a:"2 tbsp",n:"Furikake seasoning"},{a:"2 tbsp",n:"Sriracha mayo"}],steps:["Dice tuna into ½-inch cubes. Mix with soy sauce, sesame oil, sriracha. Marinate 10-20 min in fridge.","Cook sushi rice per package. Season with rice vinegar, sugar, salt while hot.","Prepare toppings: thaw edamame, slice cucumber and avocado.","Build bowls: rice base, then tuna, then arrange toppings around it.","Drizzle sriracha mayo, sprinkle furikake, add a drizzle of sesame oil. Serve immediately."],tip:"Only use sashimi-grade fish for poke — it's designated safe to eat raw by the vendor."},
-  "Chili":{ing:[{a:"2 lbs",n:"Ground beef (80/20)"},{a:"1",n:"Large onion (diced)"},{a:"1",n:"Bell pepper (diced)"},{a:"4 cloves",n:"Garlic (minced)"},{a:"2 cans",n:"Diced tomatoes (14.5 oz)"},{a:"2 cans",n:"Kidney beans (15 oz, drained)"},{a:"2 cans",n:"Tomato sauce (15 oz)"},{a:"3 tbsp",n:"Chili powder"},{a:"1 tbsp",n:"Cumin"},{a:"1 tsp",n:"Smoked paprika"},{a:"Salt, pepper",n:"to taste"}],steps:["Brown ground beef in a large pot, breaking apart. Drain most of the fat.","Add onion and bell pepper, cook 5 min. Add garlic, cook 1 more minute.","Add all spices, toast 1 minute while stirring. Add tomatoes, tomato sauce, and beans.","Bring to boil, then reduce heat. Simmer uncovered at least 45 min — the longer the better.","Taste and adjust seasoning. Serve with shredded cheddar, sour cream, sliced jalapeños, and cornbread."],tip:"Make it the day before — chili is dramatically better the next day as flavors marry overnight."},
-  "Mac & Cheese":{ing:[{a:"1 lb",n:"Elbow macaroni"},{a:"4 tbsp",n:"Butter"},{a:"¼ cup",n:"All-purpose flour"},{a:"3 cups",n:"Whole milk (warm)"},{a:"1 cup",n:"Heavy cream"},{a:"2 cups",n:"Sharp cheddar (grated)"},{a:"1 cup",n:"Gruyère (grated)"},{a:"1 tsp",n:"Dry mustard"},{a:"½ tsp",n:"Smoked paprika"},{a:"Salt, pepper, cayenne",n:""}],steps:["Cook pasta 2 min less than package directions (it finishes in the sauce). Drain and set aside.","Melt butter in a large saucepan. Whisk in flour, cook 2 min over medium heat.","Slowly pour in warm milk and cream while whisking constantly. Stir until thick (5 min).","Remove from heat. Add cheese in handfuls, stirring after each addition. Season with mustard, paprika, salt, cayenne.","Add pasta, stir to coat. Serve immediately or transfer to baking dish, top with breadcrumbs, bake 375°F for 20 min."],tip:"Use warm milk — adding cold milk to the roux causes lumps. And grate your own cheese; pre-shredded has anti-caking agents that don't melt smoothly."},
-  "Eggs Benedict":{ing:[{a:"4",n:"Large eggs"},{a:"4 slices",n:"Canadian bacon"},{a:"2",n:"English muffins (split)"},{a:"3",n:"Egg yolks"},{a:"1 tbsp",n:"Lemon juice"},{a:"½ cup",n:"Unsalted butter (melted)"},{a:"Pinch",n:"Cayenne"},{a:"1 tbsp",n:"White wine vinegar (for poaching)"}],steps:["Hollandaise: Whisk yolks + lemon juice in a double boiler until thick and pale. Slowly drizzle in melted butter while whisking. Season with cayenne and salt. Keep warm.","Bring 3 inches of water + vinegar to a gentle simmer. Crack each egg into a small cup.","Swirl the water gently. Slide egg in. Poach 3-4 min for runny yolk. Remove with slotted spoon.","Toast English muffins. Warm Canadian bacon in a pan 1-2 min.","Stack: muffin → Canadian bacon → poached egg → generous hollandaise. Serve immediately."],tip:"Add vinegar to poaching water — it helps the egg white set faster and stay together."},
-  "Grilled Steak":{ing:[{a:"2",n:"Ribeye or NY strip steaks (1¼ inch thick)"},{a:"2 tbsp",n:"Kosher salt"},{a:"1 tbsp",n:"Coarse black pepper"},{a:"2 tbsp",n:"Garlic butter"},{a:"Fresh rosemary",n:"and thyme for basting"}],steps:["Salt steaks 45 min before cooking (or overnight in fridge uncovered). This dry-brines and improves crust.","Bring steaks to room temperature 30 min before grilling.","Grill on highest heat possible. 4 min per side for medium-rare (130°F internal). Only flip once.","In final minute, add garlic herb butter on top and tilt grill to baste. Remove at 125°F — it will carryover cook.","Rest 5-10 minutes on a warm plate. Never cut immediately — you'll lose all the juices."],tip:"The dry brine is the single biggest upgrade you can do to a steak — don't skip it."},
-  "Pulled Pork":{ing:[{a:"5-7 lb",n:"Pork shoulder (bone-in)"},{a:"2 tbsp",n:"Brown sugar"},{a:"1 tbsp",n:"Paprika"},{a:"1 tbsp",n:"Garlic powder"},{a:"1 tbsp",n:"Onion powder"},{a:"1 tsp",n:"Cayenne"},{a:"2 tbsp",n:"Salt"},{a:"1 tbsp",n:"Black pepper"},{a:"½ cup",n:"Apple cider vinegar"}],steps:["Mix all dry spices. Coat pork shoulder completely. Refrigerate overnight for maximum bark.","Set smoker or oven to 225°F. Cook fat-side up until internal temp hits 195-205°F (8-12 hrs in smoker, 10-12 hrs in oven).","Wrap in foil or butcher paper when it hits 165°F to push through the stall.","Rest at least 1 hour. Pull meat by hand into chunks — it should fall apart.","Toss with your choice of BBQ sauce or apple cider vinegar sauce. Serve on buns or as a plate."],tip:"195°F is pullable, 205°F is ideal — the extra temp melts more collagen into buttery gelatin."},
-  "Chicken Pot Pie":{ing:[{a:"2 cups",n:"Cooked chicken (shredded)"},{a:"1 cup",n:"Frozen peas + carrots"},{a:"½ cup",n:"Celery (diced)"},{a:"½ cup",n:"Onion (diced)"},{a:"⅓ cup",n:"Butter"},{a:"⅓ cup",n:"All-purpose flour"},{a:"1¾ cups",n:"Chicken broth"},{a:"⅔ cup",n:"Whole milk"},{a:"2",n:"Pie crusts (store-bought or homemade)"},{a:"1",n:"Egg (for wash)"}],steps:["Preheat oven to 425°F. Cook celery and onion in butter 3 min. Whisk in flour, cook 2 min.","Slowly add broth and milk, stir until thick. Season well. Add chicken and vegetables.","Line a 9-inch pie dish with one crust. Pour in filling.","Top with second crust, crimp edges, cut vents. Brush with egg wash.","Bake 30-35 min until golden. If edges brown too quickly, cover with foil. Let cool 10 min before serving."],tip:"The egg wash gives you that gorgeous golden brown professional finish — don't skip it."},
-  "Chicken Gumbo":{ing:[{a:"1 cup",n:"Vegetable oil"},{a:"1 cup",n:"All-purpose flour"},{a:"1",n:"Large onion (diced)"},{a:"4",n:"Celery stalks (diced)"},{a:"2",n:"Bell peppers (diced)"},{a:"6 cloves",n:"Garlic (minced)"},{a:"1 lb",n:"Andouille sausage (sliced)"},{a:"3 lbs",n:"Chicken pieces"},{a:"2 cups",n:"Sliced okra"},{a:"6 cups",n:"Chicken stock"},{a:"1 tbsp",n:"Cajun seasoning"},{a:"Filé powder",n:"for serving"}],steps:["The roux is everything: cook oil and flour in a heavy pot over medium heat, stirring constantly for 30-45 min until the color of dark chocolate. Do not stop stirring or it will burn.","Add holy trinity (onion, celery, bell pepper) to roux. It will sizzle violently — keep stirring. Cook 5 min.","Add garlic, andouille, chicken pieces, and Cajun seasoning. Stir to coat everything in roux.","Pour in stock gradually. Bring to boil, skim foam, reduce heat. Simmer 1 hour.","Add okra last 15 min. Serve over white rice with filé powder sprinkled on top."],tip:"A dark roux (milk chocolate to dark chocolate color) is the soul of gumbo — don't rush it or cheat with shortcuts."},
-  "Avocado Toast":{ing:[{a:"2",n:"Ripe avocados"},{a:"2 slices",n:"Thick sourdough bread"},{a:"2",n:"Eggs (poached or fried)"},{a:"½",n:"Lemon (juice)"},{a:"1 tbsp",n:"Everything bagel seasoning"},{a:"Red pepper flakes",n:"+ microgreens to garnish"},{a:"Salt, pepper",n:"to taste"}],steps:["Toast sourdough until deeply golden and sturdy enough to hold the toppings.","Scoop avocado into a bowl. Add lemon juice, salt, pepper. Mash with a fork — keep it slightly chunky.","Toast while cooking your eggs. For poached: simmer water with splash of vinegar, swirl, crack egg in and cook 3 min.","Spread avocado generously on toast. Add egg on top.","Sprinkle everything seasoning, red pepper flakes, and microgreens. Eat immediately."],tip:"Season the avocado itself — not just on top. Under-seasoned avocado is the single most common mistake."},
-};
-
-// PREP TIME DATA
-const PREP_TIME={
-  "Blueberry Pancakes":"medium","Eggs Benedict":"slow","Oatmeal":"quick","Bagel with Lox":"quick",
-  "French Toast":"quick","Avocado Toast":"quick","Açaí Bowl":"quick","Green Smoothie":"quick",
-  "Overnight Oats":"quick","Biscuits & Gravy":"medium","Fried Chicken & Waffles":"slow",
-  "Breakfast Tacos":"quick","Migas":"medium","Chilaquiles":"medium","Kolache":"slow",
-  "Loco Moco":"medium","Spam Musubi":"medium","Malasadas":"slow",
-  "New England Clam Chowder":"slow","Lobster Roll":"medium","BLT Sandwich":"quick",
-  "Cobb Salad":"medium","Cheeseburger":"medium","Grilled Cheese":"quick",
-  "Chicken Noodle Soup":"slow","Pot Roast":"slow","BBQ Brisket":"slow",
-  "Smoked Brisket":"slow","Pulled Pork":"slow","Cedar Plank Salmon":"medium",
-  "Poke Bowl":"quick","Fish Tacos":"medium","Mac & Cheese":"medium","Chili":"medium",
-  "Meatloaf":"medium","Spaghetti & Meatballs":"medium","Grilled Steak":"medium",
-  "Chicken Pot Pie":"slow","Chicken Gumbo":"slow","Carne Asada":"medium",
-  "Beef Fajitas":"medium","Sunday Gravy":"slow","Brisket Plate":"slow",
-};
-const PREP_LABELS={quick:{t:"⚡ 20 min",cls:"quick"},medium:{t:"🕐 35 min",cls:"medium"},slow:{t:"🍖 1+ hr",cls:"slow"}};
-
-// SEASONS (US)
-const SEASONS={
-  winter:{months:[12,1,2],icon:"❄️",text:"Winter — Hearty stews, slow braises, and warm soups. Great time for pot roast and chili.",cls:"winter"},
-  spring:{months:[3,4,5],icon:"🌸",text:"Spring — Fresh asparagus, peas, and berries in season. Try lighter pasta dishes and grilled fish.",cls:"spring"},
-  summer:{months:[6,7,8],icon:"☀️",text:"Summer — Grill season! Peak corn, tomatoes, and stone fruit. Fire up the BBQ.",cls:"summer"},
-  fall:{months:[9,10,11],icon:"🍂",text:"Fall — Pumpkin, apple, and squash season. Comfort food weather returning.",cls:"fall"},
-};
-
-// BUDGET DATA (USDA food plan reference)
-const BUDGET_BASE={
-  // $ per person per day by meal type
-  thrifty:{bf:2.5,lu:4.0,sn:1.5,di:5.0},
-  moderate:{bf:4.0,lu:6.5,sn:2.5,di:8.5},
-  liberal:{bf:6.0,lu:10.0,sn:4.0,di:14.0}
-};
-const DIET_COST_MOD={omnivore:1.0,vegetarian:0.82,vegan:0.78,glutenfree:1.15,dairyfree:1.08,pescatarian:1.05};
-const GOAL_COST_MOD={balanced:1.0,weightloss:0.9,muscle:1.12,heart:1.05,keto:1.08,mediterranean:1.10};
-
-// ══════════════════ STATE ══════════════════
-let selState=null,selStyle=null,selGoal='balanced',selDiet='omnivore',budgetTier='moderate',curZone='all';
-let persons=[{name:"",restriction:"",birthday:"",role:"Adult"}];
-let planData=[],curView='week',curWeek=0,totWeeks=4;
-let opts={mealprep:false,holidays:false,snacks:false,leftovers:false,budget:false,quick:false};
-let eatFreq='weekend';
-let checks=new Set(),swaps={};
-const MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
-
-// ══════════════════ INIT ══════════════════
-window.onload=()=>{
-  // Default month to current
-  const now=new Date();
-  document.getElementById('month-select').value=MN[now.getMonth()];
-  document.getElementById('year-select').value=now.getFullYear().toString().replace(/[^0-9]/g,'');
-  // Try to set year if it exists in options
-  const yrSel=document.getElementById('year-select');
-  [...yrSel.options].forEach(o=>{if(o.value==now.getFullYear())o.selected=true;});
-  renderStates();
-  renderPersons();
-};
-
-function showScreen(id,step){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.step').forEach((s,i)=>{
-    s.classList.remove('active','done');
-    if(i<step-1)s.classList.add('done');
-    else if(i===step-1)s.classList.add('active');
-  });
-  window.scrollTo({top:0,behavior:'smooth'});
+// July 4
+if (today.getMonth() === 6 && today.getDate() === 4) {
+    holidayText = "🇺🇸 Happy Independence Day! Add BBQ, corn on the cob, and apple pie!";
 }
-function jumpStep(n){
-  const screens=['screen-state','screen-style','screen-persons','screen-prefs','screen-plan'];
-  const el=document.getElementById('step'+n);
-  if(el.classList.contains('done')||el.classList.contains('active'))showScreen(screens[n-1],n);
-}
-function resetAll(){
-  if(!confirm('Start over? Your current plan will be cleared.'))return;
-  selState=null;selStyle=null;selGoal='balanced';selDiet='omnivore';
-  planData=[];swaps={};checks=new Set();
-  showScreen('screen-state',1);
-  renderStates();
-}
-function showToast(msg,dur=2400){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
 
-// ══════════════════ LOCATION ══════════════════
-function latLngToState(lat,lng){
-  let best=null,bestArea=Infinity;
-  for(const r of GEO_STATES){
-    if(lat>=r.lat[0]&&lat<=r.lat[1]&&lng>=r.lng[0]&&lng<=r.lng[1]){
-      const area=(r.lat[1]-r.lat[0])*(r.lng[1]-r.lng[0]);
-      if(area<bestArea){bestArea=area;best=r.s;}
+// Thanksgiving (4th Thursday November)
+if (today.getMonth() === 10) {
+    let firstDay = new Date(today.getFullYear(), 10, 1);
+    let firstThursday = 1 + ((4 - firstDay.getDay() + 7) % 7);
+    let thanksgiving = firstThursday + 21;
+    if (today.getDate() === thanksgiving) {
+        holidayText = "🦃 Happy Thanksgiving! Plan turkey, stuffing, and pumpkin pie.";
     }
-  }
-  return best;
 }
-function detectLocation(){
-  const btn=document.getElementById('detect-btn');
-  const status=document.getElementById('detect-status');
-  if(!navigator.geolocation){status.textContent='Geolocation not supported in your browser.';return;}
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Detecting…';
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const {latitude:lat,longitude:lng}=pos.coords;
-    const found=latLngToState(lat,lng);
-    btn.disabled=false;btn.textContent='📍 Detect My Location';
-    if(found&&STATES.includes(found)){
-      selectState(found);
-      status.innerHTML=`<span style="color:var(--mint);font-weight:600">✓ ${found} detected</span>`;
-      showToast('📍 Location found: '+found);
+
+document.getElementById("holiday-banner").innerText = holidayText;
+
+// Email Gate
+function unlockGrocery() {
+    const email = document.getElementById("email-input").value;
+    if(email.includes("@")) {
+        document.getElementById("grocery-section").style.display = "block";
+        alert("Grocery List Unlocked!");
     } else {
-      status.textContent='Could not identify state — please tap yours below.';
+        alert("Please enter a valid email.");
     }
-  },err=>{
-    btn.disabled=false;btn.textContent='📍 Detect My Location';
-    status.textContent='Location access denied. Please tap your state.';
-  },{timeout:8000});
-}
-function filterZone(z,el){
-  curZone=z;
-  document.querySelectorAll('.zone-tab').forEach(t=>t.classList.remove('active'));
-  if(el)el.classList.add('active');
-  renderStates();
-}
-function renderStates(){
-  const pool=curZone==='all'?STATES:ZONE_MAP[curZone]||STATES;
-  document.getElementById('state-grid').innerHTML=pool.filter(s=>STATES.includes(s)).map(s=>`
-    <div class="state-card${selState===s?' selected':''}" onclick="selectState('${s.replace(/'/g,"\\'")}')">
-      <span class="state-flag">${STATE_ICON[s]||'🗺️'}</span><span>${s}</span>
-      ${selState===s?'<span style="margin-left:auto;font-size:.7rem">✓</span>':''}
-    </div>`).join('');
-}
-function selectState(s){
-  selState=s;
-  document.getElementById('state-next-btn').disabled=false;
-  renderStates();
-  document.querySelectorAll('.pop-chip').forEach(c=>{
-    const active=c.textContent.includes(s);
-    c.style.borderColor=active?'var(--red)':'';
-    c.style.color=active?'var(--red)':'';
-  });
-}
-function goToStyle(){
-  if(!selState)return;
-  renderStyles();
-  showScreen('screen-style',2);
-}
-function renderStyles(){
-  const region=STATE_REGION[selState]||'midwest';
-  const data=STYLE_DATA[region]||STYLE_DATA['midwest'];
-  document.getElementById('style-title').textContent=`Choose your food style`;
-  document.getElementById('style-sub').textContent=`${selState} sits in the ${region.replace(/([a-z])([A-Z])/g,'$1 $2')} food tradition. Pick what matches your household's taste.`;
-  const allStyles=Object.values(STYLE_DATA).flatMap(r=>r.styles);
-  const regionStyles=data.styles;
-  // Show region styles first, then a couple others
-  const extra=allStyles.filter(s=>!regionStyles.find(r=>r.id===s.id)).slice(0,2);
-  const toShow=[...regionStyles,...extra];
-  document.getElementById('style-grid').innerHTML=toShow.map(s=>`
-    <div class="style-card${selStyle===s.id?' selected':''}" onclick="selectStyle('${s.id}',this)" style="--accent:${s.accent}">
-      <div class="style-icon">${s.icon}</div>
-      <div class="style-name">${s.name}</div>
-      <div class="style-states">${s.dishes}</div>
-      <div class="style-desc">${s.desc}</div>
-      ${regionStyles.find(r=>r.id===s.id)?'<div style="font-size:.62rem;color:var(--mint);margin-top:.3rem;font-weight:600">✓ Your region</div>':''}
-    </div>`).join('');
-  // Auto-select first regional style if none selected
-  if(!selStyle){selStyle=regionStyles[0].id;}
-  setTimeout(()=>{
-    document.querySelectorAll('.style-card').forEach(c=>{
-      if(c.querySelector('.style-name').textContent===toShow.find(s=>s.id===selStyle)?.name)
-        c.classList.add('selected');
-    });
-  },50);
-}
-function selectStyle(id,el){
-  selStyle=id;
-  document.querySelectorAll('.style-card').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');
 }
 
-// ══════════════════ HOUSEHOLD ══════════════════
-function renderPersons(){
-  document.getElementById('persons-list').innerHTML=persons.map((p,i)=>`
-    <div class="person-row">
-      <input class="fi" placeholder="Name" value="${p.name}" oninput="persons[${i}].name=this.value">
-      <input class="fi" placeholder="e.g. gluten-free, vegetarian, nut allergy" value="${p.restriction}" oninput="persons[${i}].restriction=this.value">
-      <input class="fi fi-date" type="date" value="${p.birthday}" oninput="persons[${i}].birthday=this.value" title="Birthday">
-      <select class="fi" oninput="persons[${i}].role=this.value">
-        <option${p.role==='Adult'?' selected':''}>Adult</option>
-        <option${p.role==='Child'?' selected':''}>Child</option>
-        <option${p.role==='Teen'?' selected':''}>Teen</option>
-        <option${p.role==='Elder'?' selected':''}>Elder</option>
-      </select>
-      ${persons.length>1?`<button class="remove-btn" onclick="removePerson(${i})">×</button>`:'<div style="width:28px"></div>'}
-    </div>`).join('');
-}
-function addPerson(){persons.push({name:"",restriction:"",birthday:"",role:"Adult"});renderPersons();}
-function removePerson(i){persons.splice(i,1);renderPersons();}
-
-// ══════════════════ PREFS ══════════════════
-function selectGoal(g){
-  selGoal=g;
-  document.querySelectorAll('.goal-chip').forEach(c=>c.classList.remove('selected'));
-  document.getElementById('goal-'+g).classList.add('selected');
-}
-function selectDiet(d){
-  selDiet=d;
-  document.querySelectorAll('.diet-chip').forEach(c=>c.classList.remove('selected'));
-  document.getElementById('diet-'+d).classList.add('selected');
-}
-function toggleOpt(o){
-  opts[o]=!opts[o];
-  document.getElementById('opt-'+o).classList.toggle('active',opts[o]);
-  if(o==='quick'&&opts[o])showToast('⚡ Quick meals only — meals filtered to 30 min or less');
-}
-
-// ══════════════════ PLAN GENERATION ══════════════════
-function generatePlan(){
-  if(!selStyle){showToast('Please select a food style first.');return;}
-  const btn=document.getElementById('gen-btn');
-  btn.innerHTML='<span class="spinner"></span> Building your plan…';btn.disabled=true;
-
-  const monthName=document.getElementById('month-select').value;
-  const year=parseInt(document.getElementById('year-select').value);
-  const mIdx=MN.indexOf(monthName);
-  const days=new Date(year,mIdx+1,0).getDate();
-  const eatFreqSel=document.getElementById('eatout-freq').value;
-  eatFreq=eatFreqSel;
-
-  // Build holiday map
-  const holidayMap={};
-  if(opts.holidays){
-    Object.entries(US_HOLIDAYS).forEach(([dateStr,name])=>{
-      const parts=dateStr.split(' ');
-      const hMonth=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].indexOf(parts[0]);
-      const hDay=parseInt(parts[1]);
-      if(hMonth===mIdx){holidayMap[hDay]=name;}
-    });
-  }
-
-  // Build birthday map
-  const bdayMap={};
-  persons.forEach(p=>{
-    if(p.birthday){
-      const bd=new Date(p.birthday);
-      if(bd.getMonth()===mIdx){bdayMap[bd.getDate()]=p.name||'Family member';}
-    }
-  });
-
-  // Eat-out days (dynamic)
-  const eatoutDays=new Set();
-  const eatFreqMap={weekend:[0,6],weekly:[6],twice:[3,6]};
-  const eatDows=eatFreqMap[eatFreq]||[];
-
-  // Style meal data
-  const db=MEALS[selStyle];
-  if(!db){btn.innerHTML='✨ Generate My Meal Plan';btn.disabled=false;showToast('Style data not found.');return;}
-
-  // Diet filter
-  const DIET_FILTERS={
-    omnivore:()=>true,
-    vegetarian:m=>!/chicken|beef|pork|steak|brisket|chorizo|bacon|ham|sausage|shrimp|fish|salmon|tuna|crab|lobster|clam|oyster|crawfish|elk|bison|venison|spam|turkey|andouille|sausage/i.test(m.m),
-    vegan:m=>!/chicken|beef|pork|steak|brisket|chorizo|bacon|ham|sausage|shrimp|fish|salmon|tuna|crab|lobster|clam|oyster|crawfish|elk|bison|venison|spam|turkey|andouille|egg|cheese|butter|cream|yogurt|milk/i.test(m.m),
-    glutenfree:m=>!/pancakes|waffle|biscuit|bread|pasta|sandwich|wrap|taco|tortilla|sub|hoagie|muffin|toast|cracker|pretzel|donut/i.test(m.m),
-    dairyfree:m=>!/cheese|butter|cream|milk|yogurt|mac.*cheese|gratin|queso|brie|cheddar|parmesan|ricotta|mozzarella|mascarpone/i.test(m.m),
-    pescatarian:m=>!/chicken|beef|pork|steak|brisket|chorizo|bacon|ham|sausage|elk|bison|venison|spam|turkey|andouille/i.test(m.m),
-  };
-  const quickFilter=m=>{
-    const key=Object.keys(PREP_TIME).find(k=>m.m.toLowerCase().includes(k.toLowerCase()));
-    const p=key?PREP_TIME[key]:'medium';
-    return p!=='slow';
-  };
-  function pickMeal(arr,idx){
-    let filtered=arr.filter(DIET_FILTERS[selDiet]||DIET_FILTERS.omnivore);
-    if(opts.quick)filtered=filtered.filter(quickFilter);
-    if(filtered.length===0)filtered=arr;
-    return filtered[idx%filtered.length];
-  }
-
-  setTimeout(()=>{
-    planData=[];
-    let bI=0,lI=0,dI=0,sI=0;
-
-    for(let day=1;day<=days;day++){
-      const date=new Date(year,mIdx,day);
-      const dow=date.getDay();
-      const dayName=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][dow];
-      const isEatout=eatDows.includes(dow)&&eatFreq!=='never';
-      const isHoliday=!!holidayMap[day];
-      const isBday=!!bdayMap[day];
-      const isMealPrep=opts.mealprep&&dow===0;
-      const holiday=holidayMap[day];
-      const bdayName=bdayMap[day];
-
-      let bf,lu,sn=null,di;
-      if(isHoliday&&holiday&&HOLIDAY_MEALS[holiday]){
-        bf=pickMeal(db.breakfast,bI++);
-        lu=HOLIDAY_MEALS[holiday];
-        di=HOLIDAY_MEALS[holiday];
-      } else if(isEatout){
-        bf=pickMeal(db.breakfast,bI++);
-        const eatoutNames=["Restaurant Night","Takeout Night","Date Night Out","Pizza Night","Burger Night","Sushi Night"];
-        lu={m:eatoutNames[lI%eatoutNames.length],s:"Skip cooking tonight — enjoy a meal out!",cal:650,p:28,c:55,f:28};
-        di=lu;
-        lI++;
-      } else if(isMealPrep){
-        bf=pickMeal(db.breakfast,bI++);
-        lu=pickMeal(db.lunch,lI++);
-        di={m:"Meal Prep Session 🥡",s:`Batch-cook for the week: ${pickMeal(db.dinner,dI).m} + ${pickMeal(db.dinner,dI+1).m}`,cal:580,p:32,c:48,f:22};
-        dI+=2;
-      } else {
-        bf=pickMeal(db.breakfast,bI++);
-        lu=pickMeal(db.lunch,lI++);
-        di=pickMeal(db.dinner,dI++);
-      }
-
-      if(opts.snacks&&db.snack)sn=pickMeal(db.snack,sI++);
-
-      // Leftover flag
-      let leftoverNote='';
-      if(opts.leftovers&&day>1&&!isEatout&&planData[day-2]){
-        const prevDi=swaps[`${day-2}-di`]||planData[day-2].di;
-        leftoverNote=`♻️ Tonight's ${prevDi.m} makes great leftovers for tomorrow's lunch`;
-      }
-
-      planData.push({day,dayName,date,bf,lu,di,sn,isEatout,isHoliday,isBday,isMealPrep,holiday,bdayName,leftoverNote});
-    }
-
-    totWeeks=Math.ceil(days/7);curWeek=0;
-
-    // Badges
-    const styleInfo=Object.values(STYLE_DATA).flatMap(r=>r.styles).find(s=>s.id===selStyle);
-    const goalLabels={balanced:'⚖️ Balanced',weightloss:'🔥 Weight Loss',muscle:'💪 Muscle Gain',heart:'❤️ Heart Healthy',keto:'🥑 Keto',mediterranean:'🫒 Mediterranean'};
-    const dietLabels={omnivore:'🍗 Omnivore',vegetarian:'🥦 Vegetarian',vegan:'🌱 Vegan',glutenfree:'🌾 Gluten-Free',dairyfree:'🥛 Dairy-Free',pescatarian:'🐟 Pescatarian'};
-    const named=persons.filter(p=>p.name);
-    document.getElementById('plan-badges').innerHTML=`
-      <span class="info-badge">${styleInfo?styleInfo.icon+' '+styleInfo.name:selStyle}</span>
-      <span class="info-badge">📍 ${selState}</span>
-      <span class="info-badge">📅 ${monthName} ${year}</span>
-      <span class="info-badge">${days} days</span>
-      <span class="info-badge">${goalLabels[selGoal]}</span>
-      <span class="info-badge">${dietLabels[selDiet]}</span>
-      ${named.map(p=>`<span class="info-badge gold">👤 ${p.name}${p.restriction?' · '+p.restriction:''}</span>`).join('')}
-      ${opts.mealprep?'<span class="info-badge green">🥡 Meal Prep Mode</span>':''}
-      ${opts.quick?'<span class="info-badge green">⚡ Quick Meals</span>':''}
-      ${eatFreq!=='never'?`<span class="info-badge blue">🍴 Dining out: ${eatFreq}</span>`:''}`;
-
-    const legends=[];
-    if(opts.holidays&&Object.keys(holidayMap).length)legends.push(`<span class="legend-item"><span class="legend-dot" style="background:var(--gold)"></span>Holiday</span>`);
-    if(eatFreq!=='never')legends.push(`<span class="legend-item"><span class="legend-dot" style="background:var(--sky)"></span>Dining out</span>`);
-    if(opts.mealprep)legends.push(`<span class="legend-item"><span class="legend-dot" style="background:var(--mint)"></span>Meal Prep</span>`);
-    document.getElementById('legend-row').innerHTML=legends.join('');
-
-    document.getElementById('prep-banner').classList.toggle('hidden',!opts.mealprep);
-
-    renderView();
-    renderGrocery();
-    renderBudget();
-    renderSeasonBanner(mIdx);
-
-    showScreen('screen-plan',5);
-    btn.innerHTML='✨ Generate My Meal Plan';btn.disabled=false;
-  },700);
-}
-
-// ══════════════════ VIEWS ══════════════════
-function switchView(v){
-  curView=v;
-  document.getElementById('vbtn-week').classList.toggle('active',v==='week');
-  document.getElementById('vbtn-month').classList.toggle('active',v==='month');
-  document.getElementById('week-view').style.display=v==='week'?'block':'none';
-  document.getElementById('month-view').style.display=v==='month'?'block':'none';
-  document.getElementById('prev-btn').disabled=v==='month'||curWeek===0;
-  document.getElementById('next-btn').disabled=v==='month'||(curWeek>=totWeeks-1);
-  renderView();
-  updateLabel();
-}
-function navigate(dir){
-  if(curView!=='week')return;
-  curWeek=Math.max(0,Math.min(totWeeks-1,curWeek+dir));
-  document.getElementById('prev-btn').disabled=curWeek===0;
-  document.getElementById('next-btn').disabled=curWeek>=totWeeks-1;
-  renderView();
-  updateLabel();
-  renderGrocery();
-  renderBudget();
-}
-function renderView(){if(curView==='week')renderWeek();else renderMonth();updateLabel();renderMacroBars();}
-function updateLabel(){document.getElementById('view-label').textContent=curView==='week'?`Week ${curWeek+1} of ${totWeeks}`:planData[0]?MN[planData[0].date.getMonth()]+' '+planData[0].date.getFullYear():'';}
-
-function mealCell(meal,type,idx,key){
-  const label={bf:'Breakfast',lu:'Lunch',di:'Dinner',sn:'Snack'}[key];
-  const prepKey=Object.keys(PREP_TIME).find(k=>meal&&meal.m&&meal.m.toLowerCase().includes(k.toLowerCase()));
-  const prep=prepKey?PREP_TIME[prepKey]:'medium';
-  const prepInfo=PREP_LABELS[prep];
-  // Repeat check
-  let repeatWarn='';
-  for(let i=Math.max(0,idx-4);i<idx;i++){
-    const d=planData[i];if(!d)continue;
-    const m=swaps[`${i}-${key}`]||(key==='bf'?d.bf:key==='lu'?d.lu:d.di);
-    if(m&&meal&&m.m===meal.m){repeatWarn='<div class="repeat-warn">↻ Had this recently</div>';break;}
-  }
-  const cal=meal&&meal.cal?`<div class="calorie-tag">~${meal.cal} cal</div>`:'';
-  const macroW=meal?{p:meal.p*4,c:meal.c*4,f:meal.f*9}:{p:80,c:160,f:135};
-  const total=macroW.p+macroW.c+macroW.f||1;
-  return`<div class="meal-cell">
-    <button class="swap-btn" onclick="openModal(${idx})" title="Swap meals">↻</button>
-    <div class="meal-type"><span class="meal-dot ${type}"></span>${label}</div>
-    <div class="meal-main">${meal?meal.m:'–'}</div>
-    ${meal&&meal.s?`<div class="meal-side">${meal.s.length>50?meal.s.slice(0,50)+'…':meal.s}</div>`:''}
-    ${cal}
-    <div class="macro-bar"><div class="macro-p" style="width:${Math.round(macroW.p/total*100)}%"></div><div class="macro-c" style="width:${Math.round(macroW.c/total*100)}%"></div><div class="macro-f" style="width:${Math.round(macroW.f/total*100)}%"></div></div>
-    <span class="prep-time-badge ${prepInfo.cls}">${prepInfo.t}</span>
-    ${repeatWarn}
-  </div>`;
-}
-
-function renderWeek(){
-  const start=curWeek*7,wd=planData.slice(start,start+7);
-  document.getElementById('week-view').innerHTML=`<div class="week-grid">${wd.map((d,wi)=>{
-    const idx=start+wi;
-    const bf=swaps[`${idx}-bf`]||d.bf;
-    const lu=swaps[`${idx}-lu`]||d.lu;
-    const di=swaps[`${idx}-di`]||d.di;
-    const sn=swaps[`${idx}-sn`]||d.sn;
-    const extraClass=d.isHoliday?' holiday-day':d.isEatout?' eatout-day':d.isMealPrep?' prepday-day':'';
-    return`<div class="day-card${extraClass}">
-      <div class="day-header">
-        <span class="day-name">${d.dayName} ${d.day}</span>
-        <div class="day-meta">
-          ${d.isHoliday&&d.holiday?`<span class="tag holiday">${d.holiday}</span>`:''}
-          ${d.isBday?`<span class="tag" style="background:rgba(107,63,160,0.2);color:#6B3FA0">🎂 ${d.bdayName}</span>`:''}
-        </div>
-      </div>
-      <div class="day-meals">
-        ${d.isEatout?`<div class="meal-cell" style="background:rgba(26,95,138,0.07)">
-          <div class="meal-type"><span class="meal-dot eatout"></span>Dining Out</div>
-          <div class="meal-main">🍴 ${lu.m}</div>
-          <div class="meal-side">Skip cooking tonight</div>
-        </div>`:
-        mealCell(bf,'breakfast',idx,'bf')+
-        mealCell(lu,'lunch',idx,'lu')+
-        (opts.snacks&&sn?mealCell(sn,'snack',idx,'sn'):'')+
-        mealCell(di,'dinner',idx,'di')}
-        ${d.leftoverNote?`<div style="font-size:.62rem;color:var(--mint);padding:.2rem .4rem;background:rgba(26,107,74,0.06);border-radius:5px;margin-top:.3rem">${d.leftoverNote}</div>`:''}
-      </div>
-    </div>`;
-  }).join('')}</div>`;
-}
-
-function renderMonth(){
-  const DOWS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const firstDow=planData[0]?.date.getDay()||0;
-  let h=`<div class="month-grid">${DOWS.map(d=>`<div class="month-day-hdr">${d}</div>`).join('')}</div><div class="month-grid">`;
-  for(let e=0;e<firstDow;e++)h+=`<div class="month-cell empty"></div>`;
-  planData.forEach((d,i)=>{
-    const bf=swaps[`${i}-bf`]||d.bf;
-    const lu=swaps[`${i}-lu`]||d.lu;
-    h+=`<div class="month-cell${d.isHoliday?' holiday-day':''}" onclick="openModal(${i})">
-      <div class="month-num"><span>${d.day}</span>
-        <div class="month-dots">
-          ${d.isHoliday?'<span class="mdot holiday"></span>':''}
-          ${d.isEatout?'<span class="mdot eatout"></span>':''}
-        </div>
-      </div>
-      <div class="month-meal-mini"><span class="mb">${bf?bf.m.split(' ').slice(0,2).join(' '):'–'}</span><br><span>${lu?lu.m.split(' ').slice(0,2).join(' '):'–'}</span></div>
-      ${d.isHoliday?'<div class="month-holiday-bar"></div>':''}
-    </div>`;
-  });
-  h+='</div>';
-  document.getElementById('month-view').innerHTML=h;
-}
-
-// ══════════════════ MODAL ══════════════════
-function openModal(idx){
-  const d=planData[idx];
-  const bf=swaps[`${idx}-bf`]||d.bf;
-  const lu=swaps[`${idx}-lu`]||d.lu;
-  const di=swaps[`${idx}-di`]||d.di;
-  const sn=opts.snacks?(swaps[`${idx}-sn`]||d.sn):null;
-  document.getElementById('modal-title').textContent=`${d.dayName}, ${MN[d.date.getMonth()]} ${d.day}${d.isHoliday&&d.holiday?' '+d.holiday:''}${d.isBday?' 🎂 '+d.bdayName+"'s Birthday":''}`;
-  document.getElementById('modal-body').innerHTML=`
-    ${mSec(bf,'Breakfast','bf',idx)}
-    ${d.isEatout?`<div class="modal-meal-sec"><div class="modal-meal-type">🍴 Dining Out</div><div class="modal-meal-name">${lu.m}</div><div class="modal-meal-side">Enjoy a night off cooking!</div></div>`:
-      mSec(lu,'Lunch','lu',idx)+(sn?mSec(sn,'Snack','sn',idx):'')+mSec(di,'Dinner','di',idx)}
-    ${d.leftoverNote?`<div style="font-size:.78rem;color:var(--mint);background:rgba(26,107,74,0.07);padding:.55rem .8rem;border-radius:8px;margin-top:.6rem">${d.leftoverNote}</div>`:''}
-    ${d.isBday?`<div style="margin-top:.8rem;padding:.65rem .8rem;background:rgba(107,63,160,0.07);border-radius:8px;border:1px solid rgba(107,63,160,0.18)"><div style="font-size:.78rem;font-weight:700;color:#6B3FA0;margin-bottom:.2rem">🎂 ${d.bdayName}'s Birthday!</div><div style="font-size:.78rem;color:var(--slate)">Consider a birthday cake, dinner out, or their favorite special meal tonight.</div></div>`:''}`;
-  document.getElementById('modal-overlay').classList.add('open');
-}
-function mSec(meal,label,key,idx){
-  if(!meal)return'';
-  const db=MEALS[selStyle];
-  const km={bf:'breakfast',lu:'lunch',di:'dinner',sn:'snack'};
-  const pool=(db&&db[km[key]])||[];
-  const rid=`rec-${idx}-${key}`;
-  const recipe=RECIPES[meal.m]||(()=>{
-    const k=Object.keys(RECIPES).find(r=>meal.m.toLowerCase().includes(r.toLowerCase())||r.toLowerCase().includes(meal.m.toLowerCase().split(' ')[0]));
-    return k?RECIPES[k]:null;
-  })();
-  const recipeHtml=recipe?`
-    <div class="recipe-section-hdr">🛒 Ingredients</div>
-    <div class="recipe-ingredients">${recipe.ing.map(i=>`<div class="recipe-ing"><span class="recipe-ing-amt">${i.a}</span><span>${i.n}</span></div>`).join('')}</div>
-    <div class="recipe-section-hdr">👩‍🍳 Steps</div>
-    <div class="recipe-steps">${recipe.steps.map(s=>`<div class="recipe-step">${s}</div>`).join('')}</div>
-    ${recipe.tip?`<div class="recipe-tip">💡 Pro tip: ${recipe.tip}</div>`:''}
-  `:`<div class="recipe-no-data">Recipe guide coming soon.<br><span style="font-size:.68rem">Search "How to make ${meal.m}" for a quick guide.</span></div>`;
-  return`<div class="modal-meal-sec">
-    <div class="modal-meal-type"><span class="meal-dot ${km[key]}" style="width:6px;height:6px"></span>${label}</div>
-    <div class="modal-meal-name">${meal.m}</div>
-    ${meal.s?`<div class="modal-meal-side">${meal.s}</div>`:''}
-    ${meal.cal?`<div class="modal-macros">
-      <span class="modal-macro cal">~${meal.cal} cal</span>
-      <span class="modal-macro p">${meal.p}g protein</span>
-      <span class="modal-macro c">${meal.c}g carbs</span>
-      <span class="modal-macro f">${meal.f}g fat</span>
-    </div>`:''}
-    <div style="margin-top:.42rem">
-      <button class="show-swap" onclick="toggleSwap(this)">↻ Swap this meal</button>
-    </div>
-    <div class="swap-opts" style="display:none">${pool.slice(0,8).map((m,i)=>`<div class="swap-opt" onclick="doSwap(${idx},'${key}',${i})">${m.m}</div>`).join('')}</div>
-    <button class="recipe-toggle" id="rtbtn-${rid}" onclick="toggleRecipe('${rid}')">📖 How to Make</button>
-    <div class="recipe-box" id="rbox-${rid}">${recipeHtml}</div>
-  </div>`;
-}
-function toggleSwap(btn){const el=btn.parentElement.nextElementSibling;const show=el.style.display==='none';el.style.display=show?'grid':'none';btn.textContent=show?'✕ Cancel':'↻ Swap this meal';}
-function doSwap(idx,key,mIdx){
-  const db=MEALS[selStyle];
-  const km={bf:'breakfast',lu:'lunch',di:'dinner',sn:'snack'};
-  const pool=(db&&db[km[key]])||[];
-  swaps[`${idx}-${key}`]=pool[mIdx%pool.length];
-  closeModalDirect();renderView();showToast('✅ Meal swapped!');
-}
-function toggleRecipe(rid){const box=document.getElementById('rbox-'+rid);const btn=document.getElementById('rtbtn-'+rid);const open=box.classList.toggle('open');btn.classList.toggle('open',open);btn.textContent=open?'✕ Hide Recipe':'📖 How to Make';}
-function closeModal(e){if(e.target.id==='modal-overlay')closeModalDirect();}
-function closeModalDirect(){document.getElementById('modal-overlay').classList.remove('open');}
-
-// ══════════════════ MACRO BARS ══════════════════
-function renderMacroBars(){
-  const week=planData.slice(curWeek*7,curWeek*7+7);
-  let tp=0,tc=0,tf=0,n=0;
-  week.forEach(d=>{
-    [swaps[`${week.indexOf(d)*7+curWeek*7}-bf`]||d.bf,swaps[`${week.indexOf(d)*7+curWeek*7}-lu`]||d.lu,swaps[`${week.indexOf(d)*7+curWeek*7}-di`]||d.di].forEach(m=>{
-      if(m&&m.p){tp+=m.p;tc+=m.c;tf+=m.f;n++;}
-    });
-  });
-  const goalsLabel={balanced:{p:25,c:50,f:25},weightloss:{p:35,c:35,f:30},muscle:{p:35,c:45,f:20},heart:{p:25,c:50,f:25},keto:{p:25,c:5,f:70},mediterranean:{p:25,c:45,f:30}};
-  const gPct=goalsLabel[selGoal]||goalsLabel.balanced;
-  const total=tp+tc+tf||1;
-  const actP=Math.round(tp*4/((tp*4+tc*4+tf*9)||1)*100);
-  const actC=Math.round(tc*4/((tp*4+tc*4+tf*9)||1)*100);
-  const actF=Math.round(tf*9/((tp*4+tc*4+tf*9)||1)*100);
-  document.getElementById('macro-bars').innerHTML=`
-    <div class="macro-row"><span class="macro-lbl">🟥 Protein</span><div class="macro-track"><div class="macro-fill" style="width:${actP}%;background:var(--red)"></div></div><span class="macro-pct">${actP}%</span></div>
-    <div class="macro-row"><span class="macro-lbl">🟡 Carbs</span><div class="macro-track"><div class="macro-fill" style="width:${actC}%;background:var(--gold)"></div></div><span class="macro-pct">${actC}%</span></div>
-    <div class="macro-row"><span class="macro-lbl">🔵 Fat</span><div class="macro-track"><div class="macro-fill" style="width:${actF}%;background:var(--sky)"></div></div><span class="macro-pct">${actF}%</span></div>
-    <div style="font-size:.62rem;color:var(--slate);margin-top:.4rem;padding-top:.4rem;border-top:1px solid var(--border)">Target for ${selGoal}: ${gPct.p}% protein · ${gPct.c}% carbs · ${gPct.f}% fat</div>`;
-}
-
-// ══════════════════ BUDGET ══════════════════
-function setBudgetTier(t){
-  budgetTier=t;
-  document.querySelectorAll('.budget-tier').forEach(b=>b.classList.remove('active'));
-  document.getElementById('bt-'+t).classList.add('active');
-  renderBudget();
-}
-function renderBudget(){
-  if(!planData.length)return;
-  const rates=BUDGET_BASE[budgetTier]||BUDGET_BASE.moderate;
-  const dietMod=DIET_COST_MOD[selDiet]||1.0;
-  const goalMod=GOAL_COST_MOD[selGoal]||1.0;
-  const fSize=parseInt(document.getElementById('family-size')?.value||3);
-  const monthName=document.getElementById('month-select')?.value||'January';
-  const year=parseInt(document.getElementById('year-select')?.value||2026);
-  const mIdx=MN.indexOf(monthName);
-  const days=new Date(year,mIdx+1,0).getDate();
-  const eatoutDays=planData.filter(d=>d.isEatout).length;
-  const homeDays=days-eatoutDays;
-  const snackMod=opts.snacks?1:0;
-
-  const ppd=(rates.bf+rates.lu+rates.di+(rates.sn*snackMod))*dietMod*goalMod;
-  const homeCost=ppd*homeDays*fSize;
-  const eatoutCost=eatoutDays*(budgetTier==='thrifty'?12:budgetTier==='moderate'?20:35)*fSize;
-  const totalMonth=Math.round(homeCost+eatoutCost);
-  const ppdTotal=Math.round(totalMonth/days/fSize);
-
-  document.getElementById('b-monthly').textContent='$'+totalMonth.toLocaleString();
-  document.getElementById('b-perday').textContent='$'+ppdTotal;
-  document.getElementById('b-family-note').textContent=`for ${fSize} person${fSize>1?'s':''}`;
-
-  const items=[
-    {l:'Breakfast',v:Math.round(rates.bf*dietMod*goalMod*homeDays*fSize),c:'#D4A843'},
-    {l:'Lunch',v:Math.round(rates.lu*dietMod*goalMod*homeDays*fSize),c:'#C8293C'},
-    {l:'Dinner',v:Math.round(rates.di*dietMod*goalMod*homeDays*fSize),c:'#0C1F3F'},
-    {l:'Snacks',v:opts.snacks?Math.round(rates.sn*dietMod*homeDays*fSize):0,c:'#1A6B4A'},
-    {l:'Dining Out',v:eatoutCost,c:'#1A5F8A'},
-  ].filter(i=>i.v>0);
-  const maxV=Math.max(...items.map(i=>i.v));
-  document.getElementById('budget-breakdown').innerHTML=items.map(i=>`
-    <div class="budget-bar-row">
-      <span class="budget-bar-label">${i.l}</span>
-      <div class="budget-bar-track"><div class="budget-bar-fill" style="width:${Math.round(i.v/maxV*100)}%;background:${i.c}"></div></div>
-      <span class="budget-bar-amt">$${Math.round(i.v/10)*10 > 999 ? (i.v/1000).toFixed(1)+'k' : i.v}</span>
-    </div>`).join('');
-
-  const tips={thrifty:"Tip: Cook dried beans from scratch (saves ~60% vs canned). Meal prep Sundays halve your weekday food costs.",moderate:"Tip: Buy proteins in bulk at Costco or Sam's Club — freeze portions. Plan 1-2 meatless meals per week.",liberal:"Tip: Source quality ingredients from specialty stores. Try local butchers and farmers markets for premium cuts."};
-  const goalTips={muscle:" High protein adds ~12% to grocery costs — buy eggs, Greek yogurt, and chicken in bulk.",keto:" Keto's fat-heavy foods add cost — buy butter, cheese and fatty cuts on sale.",vegetarian:" Going vegetarian saves ~18% — legumes and tofu stretch farther than meat."};
-  document.getElementById('budget-tip').textContent=(tips[budgetTier]||tips.moderate)+(goalTips[selGoal]||'');
-}
-
-// ══════════════════ SEASON ══════════════════
-function renderSeasonBanner(mIdx){
-  const banner=document.getElementById('season-banner');
-  let found=null;
-  for(const[k,s] of Object.entries(SEASONS)){if(s.months.includes(mIdx+1)){found=s;break;}}
-  if(found){
-    banner.className=`season-banner ${found.cls}`;
-    banner.innerHTML=`<span style="font-size:1.3rem">${found.icon}</span><span>${found.text}</span>`;
-    banner.classList.remove('hidden');
-  } else {
-    banner.classList.add('hidden');
-  }
-}
-
-// ══════════════════ GROCERY ══════════════════
-function renderGrocery(){
-  const tmpl=GROCERY[selStyle];
-  if(!tmpl){document.getElementById('grocery-body').innerHTML='<div style="font-size:.82rem;color:var(--slate);padding:.5rem">Grocery list not available for this style.</div>';return;}
-  const fSize=parseInt(document.getElementById('family-size')?.value||3);
-  const scaleNote=fSize>4?` <span style="color:var(--red);font-size:.6rem">(scale 1.5×)</span>`:'';
-  let html='',i=0;
-  for(const[cat,items] of Object.entries(tmpl)){
-    html+=`<div class="grocery-cat"><div class="grocery-cat-name">${cat}${scaleNote}</div>`;
-    items.forEach(it=>{
-      const id=`g${i++}`;const ck=checks.has(id);
-      html+=`<div class="grocery-item${ck?' checked':''}" onclick="toggleCheck('${id}',this)">
-        <div class="grocery-checkbox">${ck?'✓':''}</div>
-        <span class="grocery-item-name">${it}</span>
-      </div>`;
-    });
-    html+='</div>';
-  }
-  document.getElementById('grocery-body').innerHTML=html;
-  document.getElementById('shopping-tip').textContent=SHOP_TIPS[selStyle]||'Buy seasonal produce for the best prices and flavor.';
-  document.getElementById('grocery-scope').textContent=curView==='month'?'Full Month':`Week ${curWeek+1}`;
-}
-function toggleCheck(id,el){
-  if(checks.has(id))checks.delete(id);else checks.add(id);
-  el.classList.toggle('checked',checks.has(id));
-  el.querySelector('.grocery-checkbox').textContent=checks.has(id)?'✓':'';
-}
-function resetChecks(){checks=new Set();renderGrocery();showToast('✓ Checklist reset');}
-function copyGrocery(){
-  const tmpl=GROCERY[selStyle];
-  if(!tmpl)return;
-  let txt='🛒 USA Plate — Grocery List\n\n';
-  for(const[cat,items] of Object.entries(tmpl)){
-    txt+=`${cat}:\n`;
-    items.forEach(it=>txt+=`• ${it}\n`);
-    txt+='\n';
-  }
-  navigator.clipboard.writeText(txt).then(()=>showToast('📋 Copied to clipboard!'));
-}
-function shareWA(){
-  const tmpl=GROCERY[selStyle];if(!tmpl)return;
-  let txt='🛒 *USA Plate Grocery List*\n';
-  for(const[cat,items] of Object.entries(tmpl)){txt+=`\n*${cat}*\n`;items.forEach(i=>txt+=`• ${i}\n`);}
-  window.open('https://wa.me/?text='+encodeURIComponent(txt));
-}
 </script>
+
 </body>
 </html>
