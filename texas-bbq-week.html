@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>USA Plate — Simple Family Meal Plans</title>
+<title>Texas BBQ Family Week | USA Plate</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{font-family:Arial;background:#F5EFE6;margin:0;color:#0C1F3F}
@@ -18,26 +18,24 @@ header{background:#0C1F3F;color:white;padding:20px;text-align:center}
 <body>
 
 <header>
-<h1>USA ★ Plate</h1>
-<p>Simple Weekly Family Meal Plans — Budget Friendly</p>
+<h1>Texas BBQ Family Week</h1>
 </header>
 
 <div class="section">
 
 <div class="card">
-<h2>Quick Planner</h2>
-<p>Generate a simple family meal structure instantly.</p>
-<button class="button" onclick="generatePlan()">Generate Weekly Plan</button>
-<ul id="plan"></ul>
+<h2>Weekly Plan</h2>
+<ul>
+<li>Brisket</li><li>BBQ Chicken</li><li>Pulled Pork</li><li>Cornbread & Beans</li><li>Smoked Sausage</li><li>BBQ Burgers</li><li>Sunday Steak</li>
+</ul>
 </div>
 
 <div class="card">
-<h2>Popular Ready-Made Plans</h2>
-<ul>
-<li><a href="budget-meal-plan.html">Budget Family Meal Plan (Under $75)</a></li>
-<li><a href="30-minute-meal-plan.html">30-Minute Dinner Meal Plan</a></li>
-<li><a href="texas-bbq-week.html">Texas BBQ Family Week</a></li>
-</ul>
+<h2>Shop Ingredients</h2>
+<a class="button" href="https://www.amazon.com" target="_blank">Shop on Amazon</a><br>
+<a class="button" href="https://www.walmart.com" target="_blank">Add to Walmart Cart</a><br>
+<a class="button" href="https://www.instacart.com" target="_blank">Order via Instacart</a><br>
+<button class="button" onclick="window.print()">Print Plan</button>
 </div>
 
 </div>
@@ -45,17 +43,6 @@ header{background:#0C1F3F;color:white;padding:20px;text-align:center}
 <div class="footer">
 Affiliate Disclosure: We may earn commissions from qualifying purchases.
 </div>
-
-<script>
-function generatePlan(){
-const meals=["Spaghetti & Garlic Bread","Taco Night","BBQ Chicken & Corn","Breakfast for Dinner","Grilled Cheese & Tomato Soup","Burger Night","Sunday Roast"];
-let output="";
-for(let i=0;i<7;i++){
-output+="<li>"+meals[i]+"</li>";
-}
-document.getElementById("plan").innerHTML=output;
-}
-</script>
 
 </body>
 </html>
